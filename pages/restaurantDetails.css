@@ -1,0 +1,94 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('../resourses/backroundRestaurant.jpg');
+    background-size:cover;
+    background-position: center;
+   
+}
+
+
+
+.smallPhoto{
+    max-width: 70px;
+    height: 70px;
+}
+
+
+
+
+section {
+    margin: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+h2 {
+    font-size: 24px;
+    color: #333;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    display: flex;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+li img {
+    max-width: 100px;
+    max-height: 100px;
+    margin-right: 10px;
+}
+
+h3 {
+    font-size: 20px;
+    color: #333;
+    margin: 0;
+}
+
+p {
+    font-size: 18px;
+    color: #666;
+    margin: 0;
+}
+
+
+section:nth-child(3) {
+    margin-top: 30px;
+}
+
+li:nth-child(odd) {
+    background-color: #f7f7f7;
+}
+
+.menu_details{
+    display: flex;
+    flex-flow: column;
+    gap: 15px;
+}
+/* #imageSection {
+    width: 400px;
+    height: 300px; 
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    
+  } */
+  
+  .slide {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    object-fit: cover; 
+  }
+  
