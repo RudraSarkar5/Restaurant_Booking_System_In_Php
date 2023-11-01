@@ -6,9 +6,9 @@
     $restaurantName = $_POST['restaurantName'];
     $address = $_POST['address'];
     $phoneNumber = $_POST['phoneNumber'];
-    $timing = $_POST['timing'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+    $openingTime = $_POST['openingTime'];
+    $closingTime = $_POST['closingTime'];
+    
    
     session_start();
     $restaurantId = $_SESSION['userEmail'];
@@ -17,8 +17,8 @@
             $sql = "UPDATE `restaurantowner` SET ownerName = '$ownerName',
              restaurantName = '$restaurantName', address = '$address',
               restaurantName = '$restaurantName',
-             phoneNumber = $phoneNumber, timing = '$timing', email ='$email',
-             password = '$password' WHERE email = '$restaurantId'";
+             phoneNumber = $phoneNumber, openingTime = '$openingTime',closingTime = '$closingTime' 
+             WHERE email = '$restaurantId'";
             $result = mysqli_query($con, $sql);
 
             if ($result) { 
