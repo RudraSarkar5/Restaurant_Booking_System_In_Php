@@ -129,7 +129,7 @@
                     </form>
                 </div>
 
-                <!-- Content will be displayed here based on the selected action -->
+
             </div>
         </div>
     </div>

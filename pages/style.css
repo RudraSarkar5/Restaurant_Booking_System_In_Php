@@ -18,7 +18,7 @@ section {
     border-radius: 5px;
 }
 .my-hr {
-    border: 1px solid #000; /* Set the border to make it visible */
-    margin: 10px 0; /* Add some space above and below the horizontal line */
+    border: 1px solid #000; 
+    margin: 10px 0; 
   }
   

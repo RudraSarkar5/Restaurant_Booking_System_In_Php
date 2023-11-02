@@ -35,13 +35,10 @@
                             Account</a>
                     </li>
 
-                    <!-- <li>
-            <a href="bookingStatus.php?restaurantId=<?=$restaurantId?>">Booking-Status</a>
-            </li> -->
                 </ul>
             </div>
 
-            <!-- Right Content Area (Initially Hidden) -->
+
             <div class="md:w-3/4 lg:w-3/4 w-full" id="content">
                 <div class="h-screen w-full flex justify-center">
                     <div class="bg-white mt-5 shadow-md p-2 mx-2 md:mx-0 md:max-w-sm">

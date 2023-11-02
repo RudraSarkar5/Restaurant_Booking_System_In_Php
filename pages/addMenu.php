@@ -132,21 +132,21 @@
                             Add Menu For Restaurant
                         </h1>
 
-                        <!-- Food Name Field -->
+
                         <div class="flex items-center ">
                             <label for="foodName" class="w-1/4 text-sm font-bold text-black">Food Name</label>
                             <input type="text" name="foodName" id="foodName" class="w-64 p-2 rounded border"
                                 placeholder="Food Name" />
                         </div>
 
-                        <!-- Food Price Field -->
+
                         <div class="flex items-center ">
                             <label for="foodPrice" class="w-1/4 text-sm font-bold text-black">Food Price</label>
                             <input type="Number" name="foodPrice" id="foodPrice" class="w-24 p-2 rounded border"
                                 placeholder="Food Price" />
                         </div>
 
-                        <!-- Menu Image Field -->
+
                         <div class="flex items-center ">
                             <label for="menuImage" class="w-1/4 text-sm font-bold text-black">Image</label>
                             <input type="file" name="menuImage" id="menuImage" class="w-64 p-2 rounded border" />
