@@ -3,7 +3,7 @@
     include ("../connect.php");
     include('../controler/fetchFromDatabase.php');
 
-  
+  manageReservation($con);
 $restaurantId = $_GET['restaurantId'];
 
 $restaurant = fetchRestaurantDetailsFromDatabase($restaurantId,$con);
@@ -135,7 +135,7 @@ $allReview = fetchCommentsFromDatabase($restaurantId,$con);
                         <td class="lg:p-4 md:p-4 p-2 text-center border"><?=$tableList[$i]['seatingCapacity']?></td>
                         <td class="lg:p-4 md:p-4 p-2 text-center border">₹ <?=$tableList[$i]['bookingPrice']?></td>
                         <?php
-                        if($_SESSION['loginStatus'] == 'customer'){
+                        if(!isset($_SESSION['userEmail']) || $_SESSION['loginStatus'] == 'customer'){
                       ?>
                         <td class="lg:p-4 md:p-4 text-center p-2 border flex gap-3">
                             <a href="./bookingPage.php?restaurantId=<?=$restaurantId?>&tableId=<?=$tableList[$i]['id']?>"

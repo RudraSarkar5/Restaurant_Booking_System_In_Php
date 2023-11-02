@@ -180,8 +180,29 @@
             
                 
         }
+
+       
+
+    function manageReservation($con){
+        $sql = "DELETE FROM `reservation` WHERE reservationDate < CURDATE() OR (reservationDate = CURDATE() AND checkOutTime < CURTIME())";
+        $result = mysqli_query($con, $sql);
         
+    }
+
+    function fetchAllTheRowIfTableExistInReservation($con,$tableId){
+        $sql = "SELECT * FROM `reservation`  WHERE tableId = $tableId ";
+         $result = mysqli_query($con, $sql);
+         return $result;
+    }
+
     
+    
+
+   
+
+
+
+
 
 
 

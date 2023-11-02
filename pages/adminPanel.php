@@ -2,6 +2,7 @@
     include('./nav.php');
     include ("../connect.php");
     include('../controler/fetchFromDatabase.php');
+    manageReservation($con);
     if((!$_SESSION['userEmail'])){
       header("location:./login.php");
     }
@@ -12,6 +13,7 @@
     $allFoodMenu =  fetchFoodMenuFromDatabase($restaurantId,$con);
     $images = fetchImagesForRestaurantFromDatabase($restaurantId,$con);
     $allReview = fetchCommentsFromDatabase($restaurantId,$con);
+    $tableList =  fetchTablesFromDatabase($restaurantId,$con);
 
 ?>
 
@@ -128,6 +130,49 @@
         ?>
 
                     </ul>
+                </section>
+                <section>
+
+                    <h1 class=" text-3xl text-blue-500 font-bold text-center">ALL TABLE IN THIS RESTAURANT</h1>
+                    <div class="w-full h-full flex justify-center items-center">
+                        <table class="mt-4 border-collapse   table-auto border-black">
+                            <thead>
+                                <tr>
+
+                                    <th class=" p-2 border">No</th>
+                                    <th class=" p-2 border">Seating-Capacity</th>
+                                    <th class=" p-2 border">Booking-Price Per Hour</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                    if(count($tableList) > 0 ){
+                      for ( $i = 0; count($tableList) > $i; $i++ ) {
+                        
+                          ?><tr>
+                                    <td class="lg:p-4 md:p-4 p-2 text-center border"><?=$i+1?></td>
+                                    <td class="lg:p-4 md:p-4 p-2 text-center border">
+                                        <?=$tableList[$i]['seatingCapacity']?></td>
+                                    <td class="lg:p-4 md:p-4 p-2 text-center border">₹
+                                        <?=$tableList[$i]['bookingPrice']?></td>
+
+
+
+                                </tr>
+
+
+                                <?php     
+                        } 
+                      }
+                    
+                    
+                  ?>
+
+                            </tbody>
+                        </table>
+                    </div>
+
                 </section>
 
                 <section>

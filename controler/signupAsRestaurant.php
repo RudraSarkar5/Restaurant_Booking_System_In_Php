@@ -39,7 +39,9 @@
         $numInRestaurantOwner = mysqli_num_rows($checkExistingAccountInRestaurantOwner);
 
         if($numInCustomer > 0 || $numInRestaurantOwner > 0 ){
-            header('location:../pages/register.php');
+             $msg = "User Already Exist.";
+            header("location:../pages/register.php?msg=$msg");
+            exit();
         }else{
             $sql = "insert into `restaurantowner` (ownerName,restaurantName,address,phoneNumber,openingTime,closingTime,email,password)
              values ('$ownerName','$restaurantName','$address','$phoneNumber','$openingTime','$closingTime','$email','$password')";

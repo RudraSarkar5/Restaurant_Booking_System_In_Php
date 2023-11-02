@@ -55,7 +55,7 @@
                 <div class="flex items-center">
                     <label for="phoneNumber" class="w-1/4 text-sm font-bold text-black">Phone Number</label>
                     <input type="number" name="phoneNumber" id="phoneNumber" class="mt-1 p-2 rounded border w-full"
-                        placeholder="email">
+                        placeholder="Phone Number">
                 </div>
                 <div class="flex items-center">
                     <label for="password" class="w-1/4 text-sm font-bold text-black">Password</label>
@@ -64,13 +64,23 @@
                 </div>
                 <div class='flex  items-center'>
                     <label for="profilePhoto" class="w-1/4 text-sm font-bold text-black">Profile Photo</label>
-                    <input type="file" name="profilePhoto" id="profilePhoto" class="mt-1 p-2 rounded border w-full"
-                        placeholder="Upload Profile Photo">
+
+                    <div>
+                        <input type="file" name="profilePhoto" id="profilePhoto" class="mt-1 p-2 rounded border w-full"
+                            placeholder="Upload Profile Photo">
+                        <h1 class=" text-gray-900">Profile Photo Not Mandatory</h1>
+                    </div>
                 </div>
                 <?php
                     if(isset($_GET['msgforCustomer'])){
                         $msg = $_GET['msgforCustomer'] ;
-                        echo '<div class="text-red-500 text-md text-center">' . $msg . '</div>';
+                        echo '<div class="text-red-900 text-md text-center">' . $msg . '</div>';
+
+                } ?>
+                <?php
+                    if(isset($_GET['msg'])){
+                        $msg = $_GET['msg'] ;
+                        echo '<div class="text-red-900 text-md text-center">' . $msg . '</div>';
 
                 } ?>
                 <button type="submit"
@@ -143,19 +153,26 @@
                 <?php
                     if(isset($_GET['msgforowner'])){
                         $msg = $_GET['msgforowner'] ;
-                        echo '<div class="text-red-500 text-md text-center">' . $msg . '</div>';
+                        echo '<div class="text-red-900  text-md text-center">' . $msg . '</div>';
 
                 } ?>
                 <?php
                     if(isset($_GET['msgforimages'])){
                         $msg = $_GET['msgforownermsgforimages'] ;
-                        echo '<div class="text-red-500 text-md text-center">' . $msg . '</div>';
+                        echo '<div class="text-red-900 text-md text-center">' . $msg . '</div>';
 
                 } ?>
                 <?php
                     if(isset($_GET['msgforimages'])){
                         $msg = $_GET['msgforimages'] ;
-                        echo '<div class="text-red-500 text-md text-center">' . $msg . '</div>';
+                        echo '<div class="text-red-900 text-md text-center">' . $msg . '</div>';
+
+                } ?>
+
+                <?php
+                    if(isset($_GET['msg'])){
+                        $msg = $_GET['msg'] ;
+                        echo '<div class="text-red-900 text-md text-center">' . $msg . '</div>';
 
                 } ?>
                 <button type="submit"

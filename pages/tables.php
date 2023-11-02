@@ -87,7 +87,7 @@
 
                                         <th class=" p-2 border">Seating-Capacity</th>
                                         <th class=" p-2 border">Booking-Price Per Hour</th>
-                                        <th class="  p-2 border">Booking-Status</th>
+
                                         <th class=" p-2 border">Actions</th>
                                     </tr>
                                 </thead>
@@ -99,14 +99,10 @@
                                         <td class=" p-2 border"><?=$tableList[$i]['seatingCapacity']?></td>
                                         <td class=" p-2 border">₹ <?=$tableList[$i]['bookingPrice']?></td>
                                         <?php
-                        if($tableList[$i]['bookingStatus'] == 1){
-                            echo "<td class=' text-green-500  p-2 border'>Booked</td>";
-                        }else{
-                            echo "<td class=' text-blue-500  p-2 border'>Available</td>";
-                        
-                      ?>
-
-
+                                        $tableId = $tableList[$i]['id'];
+                                        $resutl = fetchAllTheRowIfTableExistInReservation($con,$tableId);
+                        if(mysqli_num_rows($resutl) < 1){
+                            ?>
                                         <td class=" p-2 border flex gap-3">
                                             <a href="tables.php?restaurantId=<?=$restaurantId?>&tableId=<?=$tableList[$i]['id']?>"
                                                 class="bg-blue-500 editMenuButton m-2 hover:bg-blue-700 text-white font-bold
@@ -117,10 +113,15 @@
                                             <a href="../controler/tableDeleteForRestaurant.php?restaurantId=<?=$restaurantId?>&tableId=<?=$tableList[$i]['id']?>"
                                                 class="bg-blue-500 m-2 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded">Delete</a>
                                         </td>
+                                        <?php
+                                        }
 
-                                        <?php      
-                        }
-                      ?>
+
+                                        ?>
+
+
+
+
 
 
 

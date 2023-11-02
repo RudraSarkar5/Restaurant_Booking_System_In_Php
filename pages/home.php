@@ -2,6 +2,7 @@
     include('./nav.php');
     include('../connect.php');
     include('../controler/fetchFromDatabase.php');
+    manageReservation($con);
     if(isset($_GET["page"])){
       $page = $_GET["page"];
     }else{

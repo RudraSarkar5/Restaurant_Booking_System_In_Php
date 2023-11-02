@@ -57,15 +57,16 @@
                     <input type="number" name="tableId" id="tableId" value=<?=$tableId?>
                         class="mt-1 p-2 hidden rounded border w-full" placeholder="Password">
                 </div>
+                <?php
+                    if (isset($msg)) {
+                         echo '<div class="text-red-900 text-md text-center">' . $msg . '</div>';
+                    }
+                ?>
 
                 <button type="submit"
                     class="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition-all w-full">Booking</button>
 
-                <?php
-                    if (isset($msg)) {
-                         echo '<div class="text-red-500 text-md text-center">' . $msg . '</div>';
-                    }
-                ?>
+
             </form>
         </div>
     </div>

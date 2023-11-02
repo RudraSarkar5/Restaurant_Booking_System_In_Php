@@ -25,21 +25,25 @@
     $numInCustomer = mysqli_num_rows($checkExistingAccountInCustomer);
     $numInRestaurantOwner = mysqli_num_rows($checkExistingAccountInRestaurantOwner);
 
-
+    
     
 
     if ($numInCustomer > 0 || $numInRestaurantOwner > 0) {
-        header('location:../pages/register.php');
+        $msg = "User Already Exist.";
+        header("location:../pages/register.php?msg=$msg");
+        exit();
     } else {
-        if ($fileName == "") {
-            return;
-        } else {
+             if ($fileName == "") {
+                $fileName = "customerUniversalPhoto.jpg";
+            } 
             $sql = "INSERT INTO `user` (fullName,email,phoneNumber,password, profilePhoto) 
             VALUES ('$userName', '$email',$phoneNumber,'$password', '$fileName')";
             $result = mysqli_query($con, $sql);
 
             if ($result) {
-                move_uploaded_file($tempFile, $folder); 
+                if(!$fileName == "customerUniversalPhoto.jpg"){
+                    move_uploaded_file($tempFile, $folder); 
+                }
                 session_start();
                 $_SESSION['userEmail'] = $email;
                 $_SESSION['loginStatus'] ="customer";
@@ -49,6 +53,6 @@
             }
         }
     }
-}
+
 
 ?>
