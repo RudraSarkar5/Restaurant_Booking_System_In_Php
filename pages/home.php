@@ -8,13 +8,35 @@
     }else{
       $page = 1;
     }
-    $restaurantPerPage = 6;
+    $restaurantPerPage = 2;
     $startNumberOfRestaurant = ($page - 1) * $restaurantPerPage;
-    $result = fetchAllRestaurantFromDatabase($con);
-    $numberOfPage = ceil(mysqli_num_rows($result) / $restaurantPerPage);
-    $query1 = "SELECT * FROM `restaurantowner` LIMIT $startNumberOfRestaurant, $restaurantPerPage";
-    $result1 = mysqli_query($con, $query1);
     
+    
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $searchValue = $_POST['searchInput'];
+    if (!empty($searchValue)) {
+       
+        $query = "SELECT * FROM `restaurantowner` WHERE address LIKE '%" . $searchValue . "%'";
+    } else {
+        
+        $query = "SELECT * FROM `restaurantowner`";
+    }
+} else {
+    $query = "SELECT * FROM `restaurantowner`";
+}
+
+
+$totalResults = mysqli_query($con, $query);
+
+
+$numberOfPage = ceil(mysqli_num_rows($totalResults) / $restaurantPerPage);
+
+
+$query .= " LIMIT $startNumberOfRestaurant, $restaurantPerPage";
+
+
+$result1 = mysqli_query($con, $query);
+
 
     
 ?>
@@ -35,7 +57,15 @@
 
 <body>
     <div class="content-container w-full  ">
-        <div class="mx-auto mt-10 h-[150px] flex justify-center  items-center w-full lg:h-[400px] md:h-[400px]">
+        <form method="POST" id="autoForm" action="./home.php" class="w-full flex justify-center items-center">
+            <input class="w-3/4  my-4 p-4 rounded-lg" id="searchInput" name="searchInput" type="text" <?php if (isset($searchValue) && strlen($searchValue) != 0) {
+            echo 'value="' . $searchValue . '"';
+        } ?> placeholder="Search here by location" autofocus
+                onfocus="this.selectionStart = this.selectionEnd = this.value.length;">
+        </form>
+
+
+        <div class=" mx-auto mt-10 h-[150px] flex justify-center items-center w-full lg:h-[400px] md:h-[400px]">
             <div class="slideshow h-[150px] md:h-[400px] w-[90%]">
                 <img src="../resourses/4.jpg" class="slide rounded-md" alt="" />
                 <img src="../resourses/5.webp" class="slide rounded-md" alt="" />
@@ -146,6 +176,13 @@
     <script>
     let currentSlide = 0;
     const slides = document.querySelectorAll(".slide");
+    const searchInput = document.getElementById('searchInput');
+    const autoForm = document.getElementById('autoForm');
+
+    searchInput.addEventListener('input', function() {
+        autoForm.submit();
+    });
+
 
     function showSlide(n) {
         slides[currentSlide].style.display = "none";
