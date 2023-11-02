@@ -4,6 +4,10 @@
     include('../controler/fetchFromDatabase.php');
 
     $restaurantId = $_GET['restaurantId'];
+      
+     if(isset($_GET['msg'])){
+          $msg = $_GET['msg'];
+     }
     
     $restaurant = fetchRestaurantDetailsFromDatabase($restaurantId,$con);
     
@@ -114,8 +118,14 @@
                             </div>
 
                         </div>
+                        <?php
+                    if (isset($msg)) {
+                         echo '<div class="text-red-500 text-md text-center">' . $msg . '</div>';
+                    }
+                ?>
                         <button type="submit"
                             class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline transition-all">Update</button>
+
                     </form>
                 </div>
 

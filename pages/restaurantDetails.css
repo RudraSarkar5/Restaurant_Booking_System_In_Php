@@ -91,4 +91,14 @@ li:nth-child(odd) {
     display: flex;
     object-fit: cover; 
   }
+
+  .alert {
+    position: absolute;
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+}
+
   

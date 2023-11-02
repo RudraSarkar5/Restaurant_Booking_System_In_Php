@@ -157,6 +157,34 @@
         return $userNameRow;
     }
 
+    function fetchRestaurantTimesFromDatabase($restaurantId, $con) {
+    
+            $query = "SELECT openingTime, closingTime FROM restaurantowner WHERE email = '$restaurantId'";
+    
+    
+            $result = mysqli_query($con, $query);
+    
+            if ($result) {
+        
+                if (mysqli_num_rows($result) > 0) {
+                    $row = mysqli_fetch_assoc($result);
+                    $openingTime = $row['openingTime'];
+                    $closingTime = $row['closingTime'];
+
+                }
+       
+            
+            
+                return array("openingTime" => $openingTime, "closingTime" => $closingTime);
+            } 
+            
+                
+        }
+        
+    
+
+
+
 
 
 

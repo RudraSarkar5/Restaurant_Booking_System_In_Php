@@ -1,6 +1,7 @@
 <?php
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
     include('../connect.php');
+    include('./fetchFromDatabase.php');
     $checkingDate = $_POST['checkingDate'];
     $checkingTime = $_POST['checkingTime'];
     $checkoutTime = $_POST['checkoutTime'];
@@ -8,6 +9,33 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $userId = $_POST['userId'];
     $tableId = $_POST['tableId'];
 
+   $restaurantTimes = fetchRestaurantTimesFromDatabase($restaurantId, $con);
+
+    $restaurantOpeningTime = strtotime($restaurantTimes['openingTime']);
+    $restaurantClosingTime = strtotime($restaurantTimes['closingTime']);
+
+    $checkingTime = strtotime($checkingTime);
+    $checkoutTime = strtotime($checkoutTime);
+
+    if (empty($checkingDate) || empty($checkingTime) || empty($checkoutTime)) {
+        $msg = "Please Fill All The Fields Properly";
+        header("location:../pages/bookingPage.php?restaurantId=$restaurantId&tableId=$tableId&userId=$userId&msg=$msg");
+        exit();
+    }
+
+   
+    if ($checkingTime >= $restaurantOpeningTime && $checkoutTime <= $restaurantClosingTime) {
+        
+    } else {
+        $msg = "Please select a valid time within the restaurant time.";
+        header("location:../pages/bookingPage.php?restaurantId=$restaurantId&tableId=$tableId&userId=$userId&msg=$msg");
+        exit();
+    }
+    
+    
+    
+
+    
     $query = "SELECT *
               FROM reservation
               WHERE restaurantId = '$restaurantId' 
@@ -22,10 +50,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $result = mysqli_query($con, $query);
 
     if ($result) {
-        // Check if there are any reservations found
         if (mysqli_num_rows($result) > 0) {
             
-            echo "The table is already booked for the selected time slot.";
+            $msg =  "The table is already booked for the selected time slot.";
         } else {
             $priceQuery = "SELECT bookingPrice FROM tables WHERE id = '$tableId'";
             $bookingUpdateQuery = "UPDATE tables SET bookingStatus = 1 WHERE id = $tableId";
@@ -39,12 +66,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             VALUES ('$restaurantId', '$userId', '$tableId', '$checkingDate', '$checkingTime', '$checkoutTime',$timeDifferenceInHours,$totalBookingPrice)";
             $result2=mysqli_query($con,$insertQuery);
             if($result2){
-                header("Location: ../pages/restaurantDetails.php?restaurantId=$restaurantId");
+                 $msg =  "Successfully Booked.";
+                header("Location: ../pages/restaurantDetails.php?restaurantId=$restaurantId&msg=$msg");
 
             }
         }
     } else {
-        // Handle the case where the query has an error
         echo "Error executing the query: " . mysqli_error($con);
     }
 }
