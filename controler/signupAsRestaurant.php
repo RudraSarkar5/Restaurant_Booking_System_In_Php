@@ -14,10 +14,17 @@
         
         $numberOfImages = count($_FILES["images"]["tmp_name"]);
 
-        
+        if (empty($ownerName) || empty($restaurantName) || empty($address) || empty($phoneNumber) || empty($openingTime) || empty($closingTime) || empty($email) || empty($password)) {
+            $msg = "Please Fill All The Fields Properly";
+            header("location:../pages/register.php?msgforowner=$msg");
+            exit();
+        }
+
 
         if (empty($_FILES["images"]["tmp_name"][0])) {
-            header('location:../pages/register.php');
+            $msg = "please Add images.";
+            header("location:../pages/register.php?msgforimages=$msg");
+            exit();
         }
            
         

@@ -7,7 +7,7 @@
     }else{
       $page = 1;
     }
-    $restaurantPerPage = 2;
+    $restaurantPerPage = 6;
     $startNumberOfRestaurant = ($page - 1) * $restaurantPerPage;
     $result = fetchAllRestaurantFromDatabase($con);
     $numberOfPage = ceil(mysqli_num_rows($result) / $restaurantPerPage);

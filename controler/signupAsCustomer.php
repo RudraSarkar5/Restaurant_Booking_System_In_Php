@@ -10,6 +10,12 @@
     $tempFile = $_FILES['profilePhoto']['tmp_name']; 
     $folder = "../resourses/profilePhoto/".$fileName;
 
+    if (empty($userName) || empty($email) || empty($phoneNumber) || empty($password)  ) {
+        $msgforCustomer = "Please Fill All The Fields Properly";
+        header("location:../pages/register.php?msgforCustomer=$msgforCustomer");
+        exit();
+    }
+
     $existingQueryInCustomer = "select * from `user` where email ='$email'";
     $existingQueryInRestaurantOwner = "select * from `restaurantOwner` where email ='$email'";
        

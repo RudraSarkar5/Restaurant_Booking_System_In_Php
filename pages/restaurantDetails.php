@@ -57,13 +57,13 @@ $allReview = fetchCommentsFromDatabase($restaurantId,$con);
         </div>
 
         <?php
+        if(isset($_GET['msg'])){
           $msg = $_GET['msg'] ?>
-        <div id="alertMessage"
-            class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 bg-green-500 text-white rounded-lg shadow-md">
+        <div id="alertMessage" class="fixed top-4 left-1/2  p-4 bg-green-500 text-white rounded-lg shadow-md">
             <?php echo $msg; ?>
         </div>
 
-        <?php ?>
+        <?php } ?>
 
 
         <section class=" ">
@@ -206,7 +206,7 @@ $allReview = fetchCommentsFromDatabase($restaurantId,$con);
         var alertMessage = document.getElementById('alertMessage');
         alertMessage.style.display = 'none';
     }
-    setTimeout(hideAlertMessage, 3000);
+    setTimeout(hideAlertMessage, 4000);
     smallPhotos.forEach((photo) => {
         photo.addEventListener('click', () => {
             bigPhoto.src = photo.src;
