@@ -8,7 +8,7 @@
     }else{
       $page = 1;
     }
-    $restaurantPerPage = 2;
+    $restaurantPerPage = 6;
     $startNumberOfRestaurant = ($page - 1) * $restaurantPerPage;
     
     
@@ -16,7 +16,7 @@
     $searchValue = $_POST['searchInput'];
     if (!empty($searchValue)) {
        
-        $query = "SELECT * FROM `restaurantowner` WHERE address LIKE '%" . $searchValue . "%'";
+        $query = "SELECT * FROM `restaurantowner` WHERE address LIKE '" . $searchValue . "%'";
     } else {
         
         $query = "SELECT * FROM `restaurantowner`";
