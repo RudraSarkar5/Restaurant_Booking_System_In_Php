@@ -66,7 +66,7 @@
     <div class="flex items-center justify-center h-screen">
         <div class="bg-white bg-opacity-60 p-8 rounded-lg shadow-lg">
             <div class="flex flex-col justify-center items-center">
-                <img src="../resourses/user.png" alt="avater image" height="150px" width="100px">
+                <img src="../resourses/Logo/user.png" alt="avater image" height="150px" width="100px">
                 <h2 class="text-2xl font-semibold mb-4 text-center">Login</h2>
             </div>
 

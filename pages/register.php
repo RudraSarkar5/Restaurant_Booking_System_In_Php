@@ -17,7 +17,7 @@
         <div class="bg-white bg-opacity-60 px-5 py-2 rounded-lg mt-10 shadow-lg">
 
             <div class="flex flex-col justify-center items-center ">
-                <img src="../resourses/user.png" alt="avater image" height="100px" width="50px">
+                <img src="../resourses/Logo/user.png" alt="avater image" height="100px" width="50px">
 
             </div>
 

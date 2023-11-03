@@ -2,6 +2,9 @@
     include('./nav.php');
     include ("../connect.php");
     include('../controler/fetchFromDatabase.php');
+    if((!$_SESSION['userEmail'])){
+      header("location:./login.php");
+    }
     manageReservation($con);
     
     $restaurantId = $_GET['restaurantId'];
