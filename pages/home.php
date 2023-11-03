@@ -67,9 +67,17 @@ $result1 = mysqli_query($con, $query);
 
         <div class=" mx-auto mt-10 h-[150px] flex justify-center items-center w-full lg:h-[400px] md:h-[400px]">
             <div class="slideshow h-[150px] md:h-[400px] w-[90%]">
-                <img src="../resourses/4.jpg" class="slide rounded-md" alt="" />
-                <img src="../resourses/5.webp" class="slide rounded-md" alt="" />
-                <img src="../resourses/6.jpeg" class="slide rounded-md" alt="" />
+                <img src="../resourses/SlideImages/slideImage1.jpg" class="slide rounded-md" alt="" />
+                <img src="../resourses/SlideImages/slideImage2.jpg" class="slide rounded-md" alt="" />
+                <img src="../resourses/SlideImages/slideImage3.jpg" class="slide rounded-md" alt="" />
+                <img src="../resourses/SlideImages/slideImage4.jpg" class="slide rounded-md" alt="" />
+                <img src="../resourses/SlideImages/slideImage5.jpg" class="slide rounded-md" alt="" />
+                <img src="../resourses/SlideImages/slideImage6.jpg" class="slide rounded-md" alt="" />
+                <img src="../resourses/SlideImages/slideImage7.jpg" class="slide rounded-md" alt="" />
+                <img src="../resourses/SlideImages/slideImage8.jpg" class="slide rounded-md" alt="" />
+                <img src="../resourses/SlideImages/slideImage9.jpg" class="slide rounded-md" alt="" />
+                <img src="../resourses/SlideImages/slideImage10.jpg" class="slide rounded-md" alt="" />
+
             </div>
         </div>
         <h1 class="text-4xl text-center font-serif mt-5 animate-bounce">
@@ -148,7 +156,7 @@ $result1 = mysqli_query($con, $query);
             <div class="flex flex-wrap justify-evenly ml-10">
                 <div class="w-full md:w-1/2 lg:w-1/4 mb-8 md:mb-0">
                     <h2 class="text-2xl font-semibold mb-4">Contact Us</h2>
-                    <p class="text-gray-400">City, Country</p>
+                    <p class="text-gray-400">Kolkata,India</p>
                     <p class="text-gray-400">Email: www.uniquesoftware@gamil.com</p>
                     <p class="text-gray-400">Phone: +9199999999</p>
                     <p class="text-gray-400">Monday - Friday: 10:00 AM - 10:00 PM</p>
