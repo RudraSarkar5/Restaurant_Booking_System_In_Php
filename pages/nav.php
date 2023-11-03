@@ -38,7 +38,7 @@
 ?>
 
 
-                <a href="#" class="text-white">Contact Us</a>
+
             </div>
             <div class="md:hidden">
                 <button id="menu-button" class="text-white">
@@ -65,18 +65,16 @@
                 }
             ?>
 
-            <a href="#" class=" text-white p-2">Contact Us</a>
+
         </div>
     </nav>
     <script>
+    const menuButton = document.getElementById("menu-button");
+    const menuLinks = document.getElementById("menu-links");
 
-        const menuButton = document.getElementById("menu-button");
-        const menuLinks = document.getElementById("menu-links");
-
-        menuButton.addEventListener("click", () => {
-            menuLinks.classList.toggle("hidden");
-        });
-
+    menuButton.addEventListener("click", () => {
+        menuLinks.classList.toggle("hidden");
+    });
     </script>
 </body>
 

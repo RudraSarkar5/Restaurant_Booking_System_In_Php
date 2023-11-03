@@ -33,7 +33,7 @@
         header("location:../pages/register.php?msg=$msg");
         exit();
     } else {
-             if ($fileName == "") {
+             if (empty($fileName)) {
                 $fileName = "customerUniversalPhoto.jpg";
             } 
             $sql = "INSERT INTO `user` (fullName,email,phoneNumber,password, profilePhoto) 
@@ -41,7 +41,7 @@
             $result = mysqli_query($con, $sql);
 
             if ($result) {
-                if(!$fileName == "customerUniversalPhoto.jpg"){
+                if($fileName != "customerUniversalPhoto.jpg"){
                     move_uploaded_file($tempFile, $folder); 
                 }
                 session_start();

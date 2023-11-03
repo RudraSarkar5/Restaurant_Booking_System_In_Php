@@ -172,7 +172,9 @@ $allReview = fetchCommentsFromDatabase($restaurantId,$con);
 
     <section>
         <h2 class="font-bold">Customer Reviews</h2>
-
+        <?php 
+        if ( $restaurantId != $_SESSION['userEmail']){
+         ?>
         <form method="POST" action="../controler/addComments.php" class="flex items-center space-x-4">
             <input type="text" name="comment" placeholder="Write your review here..."
                 class="w-3/4 p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring focus:ring-blue-200">
@@ -180,6 +182,10 @@ $allReview = fetchCommentsFromDatabase($restaurantId,$con);
             <button class="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600" type="submit">Submit
             </button>
         </form>
+        <?php
+        }
+        ?>
+
 
         <ul>
             <?php

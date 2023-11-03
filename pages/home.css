@@ -13,6 +13,18 @@ body{
     display: flex;
   }
 
+  .image-container {
+    width: 330px;
+    height: 330px;
+    
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+}
+
+
   
 
 

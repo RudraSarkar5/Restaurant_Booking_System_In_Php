@@ -11,7 +11,7 @@
     
         
         
-            $sql = "INSERT INTO `tables` (seatingCapacity,bookingPrice,bookingStatus,restaurantId ) VALUES ($tableCapacity,$bookingPrice,0,'$restaurantId')";
+            $sql = "INSERT INTO `tables` (seatingCapacity,bookingPrice,restaurantId ) VALUES ($tableCapacity,$bookingPrice,'$restaurantId')";
             $result = mysqli_query($con, $sql);
 
             if ($result) {

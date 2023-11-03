@@ -37,8 +37,7 @@ $query .= " LIMIT $startNumberOfRestaurant, $restaurantPerPage";
 
 $result1 = mysqli_query($con, $query);
 
-
-    
+ 
 ?>
 
 <!DOCTYPE html>
@@ -57,7 +56,8 @@ $result1 = mysqli_query($con, $query);
 
 <body>
     <div class="content-container w-full  ">
-        <form method="POST" id="autoForm" action="./home.php" class="w-full flex justify-center items-center">
+        <form method="POST" id="autoForm" autocomplete="off" action="./home.php"
+            class="w-full flex justify-center items-center">
             <input class="w-3/4  my-4 p-4 rounded-lg" id="searchInput" name="searchInput" type="text" <?php if (isset($searchValue) && strlen($searchValue) != 0) {
             echo 'value="' . $searchValue . '"';
         } ?> placeholder="Search here by location" autofocus
@@ -88,10 +88,12 @@ $result1 = mysqli_query($con, $query);
             $firstImageName = $restaurantFirstImage['imageName'];
        ?>
             <div
-                class="bg-gray-100 flex-col justify-center items-center  w-full md:w-[25%] lg:w-[27%] h-[430px] mx-6 mb-8 p-2">
+                class="bg-gray-100 flex-col justify-center items-center  w-full md:w-[25%] lg:w-[27%] h-[400px] mx-6 mb-8 p-2">
+                <div class="image-container mx-auto  ">
+                    <img class=" mx-auto overflow-hidden" src="../resourses/restaurantImages/<?=$firstImageName ?>"
+                        alt=<?=$firstImageName ?> />
+                </div>
 
-                <img width="330px" height="330px" class=" mx-auto "
-                    src="../resourses/restaurantImages/<?=$firstImageName ?>" alt=<?=$firstImageName ?> />
                 <div class="p-4 flex justify-center items-center flex-col">
                     <h1 class="text-2xl font-semibold "><?=$restaurant["restaurantName"] ?></h1>
                     <p class="text-gray-600">Location: <?=$restaurant["address"] ?></p>
