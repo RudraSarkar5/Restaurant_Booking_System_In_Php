@@ -6,6 +6,7 @@
 $database = new DatabaseConnection();
 $pdo = $database->getConnection();
     include('../controler/fetchFromDatabase.php');
+    $obj = new DatabaseManager($pdo);
 
     $restaurantId = $_GET['restaurantId'];
       
@@ -13,7 +14,7 @@ $pdo = $database->getConnection();
           $msg = $_GET['msg'];
      }
     
-    $restaurant = fetchRestaurantDetailsFromDatabase($restaurantId,$pdo);
+    $restaurant = $obj->fetchRestaurantDetailsFromDatabase($restaurantId);
     
 
 ?>

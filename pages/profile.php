@@ -6,16 +6,17 @@
     $database = new DatabaseConnection();
     $pdo = $database->getConnection();
     include('../controler/fetchFromDatabase.php');
+    $obj = new DatabaseManager($pdo);
     if((!$_SESSION['userEmail'])){
       header("location:./login.php");
     }
-    manageReservation($pdo);
+    $obj->manageReservation();
     
     $restaurantId = $_GET['restaurantId'];
     
-    $user = fetchProfileDetailsFromDatabase($restaurantId,$pdo);
+    $user =$obj->fetchProfileDetailsFromDatabase($restaurantId);
     
-    $bookingList = fetchTotalBookingFromDatabase($restaurantId,$pdo);
+    $bookingList = $obj->fetchTotalBookingFromDatabase($restaurantId);
 
 ?>
 
@@ -113,7 +114,7 @@
                                             <td class="lg:p-4 md:p-4 p-2 text-center border">
                                                 <?php
                                       $id = $bookingList[$i]['restaurantId'];
-                                      $user = fetchRestaurantNameFromDatabase($id,$pdo);
+                                      $user = $obj->fetchRestaurantNameFromDatabase($id);
                                     ?>
 
 

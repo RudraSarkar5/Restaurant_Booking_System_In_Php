@@ -6,16 +6,17 @@ require_once('../connect.php');
 $database = new DatabaseConnection();
 $pdo = $database->getConnection();
 include('../controler/fetchFromDatabase.php');
+$obj = new DatabaseManager($pdo);
 
-manageReservation($pdo);
+$obj->manageReservation();
 
 $restaurantId = $_GET['restaurantId'];
 
-$restaurant = fetchRestaurantDetailsFromDatabase($restaurantId, $pdo);
-$images = fetchImagesForRestaurantFromDatabase($restaurantId, $pdo);
-$allFoodMenu = fetchFoodMenuFromDatabase($restaurantId, $pdo);
-$tableList = fetchTablesFromDatabase($restaurantId, $pdo);
-$allReview = fetchCommentsFromDatabase($restaurantId, $pdo);
+$restaurant = $obj->fetchRestaurantDetailsFromDatabase($restaurantId);
+$images = $obj->fetchImagesForRestaurantFromDatabase($restaurantId);
+$allFoodMenu = $obj->fetchFoodMenuFromDatabase($restaurantId);
+$tableList = $obj->fetchTablesFromDatabase($restaurantId);
+$allReview = $obj->fetchCommentsFromDatabase($restaurantId);
 ?>
 
 <!DOCTYPE html>
@@ -33,7 +34,7 @@ $allReview = fetchCommentsFromDatabase($restaurantId, $pdo);
             <div class="md:w-1/2 lg:w-1/2 w-full p-4 flex flex-col justify-center items-center">
                 <h1 class="text-3xl font-semibold text-blue-500"><?= $restaurant['restaurantName'] ?></h1>
                 <?php
-                $bookingPrice = fetchBookingPriceFromDatabase($restaurant['email'], $pdo);
+                $bookingPrice = $obj->fetchBookingPriceFromDatabase($restaurant['email']);
                 ?>
                 <p class="text-sm">Address: <?= $restaurant['address'] ?></p>
                 <p class="text-lg">Price of Reservation: ₹<?= $bookingPrice["min"] ?> - ₹<?= $bookingPrice["max"] ?></p>

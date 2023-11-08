@@ -6,16 +6,17 @@ require_once('../connect.php');
 $database = new DatabaseConnection();
 $pdo = $database->getConnection();
 include('../controler/fetchFromDatabase.php');
+$obj = new DatabaseManager($pdo);
 
 $restaurantId = $_GET['restaurantId'];
 
 if (isset($_GET['tableId'])) {
     $tableId = $_GET['tableId'];
-    $tableDetails = fetchTableDetailsFromDatabase($tableId, $pdo); // Replace $con with $pdo
+    $tableDetails = $obj->fetchTableDetailsFromDatabase($tableId); // Replace $con with $pdo
 }
 
-$tableList = fetchTablesFromDatabase($restaurantId, $pdo); // Replace $con with $pdo
-$restaurant = fetchRestaurantDetailsFromDatabase($restaurantId, $pdo); // Replace $con with $pdo
+$tableList = $obj->fetchTablesFromDatabase($restaurantId); // Replace $con with $pdo
+$restaurant = $obj->fetchRestaurantDetailsFromDatabase($restaurantId); // Replace $con with $pdo
 
     
 ?>
@@ -100,7 +101,7 @@ $restaurant = fetchRestaurantDetailsFromDatabase($restaurantId, $pdo); // Replac
                                         <td class=" p-2 border">₹ <?=$tableList[$i]['bookingPrice']?></td>
                                         <?php
                                         $tableId = $tableList[$i]['id'];
-                                        $resutl = fetchAllTheRowIfTableExistInReservation($pdo,$tableId);
+                                        $resutl = $obj->fetchAllTheRowIfTableExistInReservation($tableId);
                         if(count($resutl) < 1){
                             ?>
                                         <td class=" p-2 border flex gap-3">

@@ -31,7 +31,7 @@ $pdo = $database->getConnection();
             move_uploaded_file($tempFile, $folder);
             header('Location: ../pages/addMenu.php?restaurantId=' . $restaurantId);
         } 
-            
+           
     } else {
         // Handle file upload error
         echo "File upload failed.";

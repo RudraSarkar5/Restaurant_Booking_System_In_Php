@@ -6,12 +6,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $database = new DatabaseConnection();
 $pdo = $database->getConnection();
     include('./fetchFromDatabase.php');
+    $obj = new DatabaseManager($pdo);
     $checkingDate = $_POST['checkingDate'];
     $checkingTime = $_POST['checkingTime'];
     $checkoutTime = $_POST['checkoutTime'];
     $restaurantId = $_POST['restaurantId'];
     $userId = $_POST['userId'];
     $tableId = $_POST['tableId'];
+    
 
     if (empty($checkingDate) || empty($checkingTime) || empty($checkoutTime)) {
         $msg = "Please Fill All The Fields Properly";
@@ -19,7 +21,19 @@ $pdo = $database->getConnection();
         exit();
     }
 
-    $restaurantTimes = fetchRestaurantTimesFromDatabase($restaurantId, $pdo);
+    $currentDateTime = new DateTime(); // Get the current date and time
+    $userSelectedDateTime = new DateTime($checkingDate . ' ' . $checkingTime); // Combine the date and time
+
+    if ($userSelectedDateTime < $currentDateTime) {
+    $msg = "Dont use Pasing time to booking";
+    header("location:../pages/bookingPage.php?restaurantId=$restaurantId&tableId=$tableId&userId=$userId&msg=$msg");
+    exit(); 
+}
+
+    
+    
+
+    $restaurantTimes = $obj->fetchRestaurantTimesFromDatabase($restaurantId);
     $restaurantOpeningTime = strtotime($restaurantTimes['openingTime']);
     $restaurantClosingTime = strtotime($restaurantTimes['closingTime']);
 

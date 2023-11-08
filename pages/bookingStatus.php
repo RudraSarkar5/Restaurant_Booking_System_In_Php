@@ -6,12 +6,13 @@
 $database = new DatabaseConnection();
 $pdo = $database->getConnection();
    include('../controler/fetchFromDatabase.php');
+   $obj = new DatabaseManager($pdo);
 
     $restaurantId = $_GET['restaurantId'];
     
-    $restaurant = fetchRestaurantDetailsFromDatabase($restaurantId,$pdo);
-    $images = fetchImagesForRestaurantFromDatabase($restaurantId,$pdo);
-    $bookingList = fetchBookingStatusFromDatabase($restaurantId,$pdo);
+    $restaurant = $obj->fetchRestaurantDetailsFromDatabase($restaurantId);
+    $images = $obj->fetchImagesForRestaurantFromDatabase($restaurantId);
+    $bookingList = $obj->fetchBookingStatusFromDatabase($restaurantId);
 
 ?>
 
@@ -109,7 +110,7 @@ $pdo = $database->getConnection();
                                 <td class=" p-1 text-center border">
                                     <?php
                                       $id = $bookingList[$i]['userId'];
-                                      $user = fetchCustomerNameFromDatabase($id,$pdo);
+                                      $user = $obj->fetchCustomerNameFromDatabase($id);
                                     ?>
                                     <?=$user['fullName']?>
                                 </td>

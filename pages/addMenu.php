@@ -6,16 +6,17 @@ require_once('../connect.php');
 $database = new DatabaseConnection();
 $pdo = $database->getConnection();
 include('../controler/fetchFromDatabase.php');
+$obj = new DatabaseManager($pdo);
 
 $restaurantId = $_GET['restaurantId'];
 
 if (isset($_GET['menuId'])) {
     $menuId = $_GET['menuId'];
-    $menuDetails = fetchMenuDetailsFromDatabase($menuId, $pdo); // Replace $con with $pdo
+    $menuDetails =$obj->fetchMenuDetailsFromDatabase($menuId); // Replace $con with $pdo
 }
 
-$allFoodMenu = fetchFoodMenuFromDatabase($restaurantId, $pdo); // Replace $con with $pdo
-$restaurant = fetchRestaurantDetailsFromDatabase($restaurantId, $pdo); // Replace $con with $pdo
+$allFoodMenu = $obj->fetchFoodMenuFromDatabase($restaurantId); // Replace $con with $pdo
+$restaurant = $obj->fetchRestaurantDetailsFromDatabase($restaurantId); // Replace $con with $pdo
 
     
 ?>

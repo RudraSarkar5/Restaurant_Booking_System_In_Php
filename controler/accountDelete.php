@@ -1,6 +1,11 @@
 <?php
-include('../connect.php');
+require_once('../connect.php');
+
+// Create a DatabaseConnection instance to establish the database connection.
+$database = new DatabaseConnection();
+$pdo = $database->getConnection();
 include('./fetchFromDatabase.php');
+$obj = new DatabaseManager($pdo);
 
 if (isset($_GET['restaurantId']) && isset($_GET['account'])) {
     $restaurantId = $_GET['restaurantId'];
@@ -10,7 +15,7 @@ if (isset($_GET['restaurantId']) && isset($_GET['account'])) {
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         if ($_GET['account'] == 'restaurant') {
-            $images = fetchImagesForRestaurantFromDatabase($restaurantId, $pdo);
+            $images = $obj->fetchImagesForRestaurantFromDatabase($restaurantId);
             
             $query1 = "DELETE FROM `restaurantimages` WHERE email = :restaurantId";
             $stmt1 = $pdo->prepare($query1);

@@ -1,6 +1,4 @@
 <?php
-
-
 include('./nav.php');
 
 // Include the DatabaseConnection class file
@@ -12,9 +10,10 @@ $pdo = $database->getConnection();
 
 // Include the fetchFromDatabase function
 include('../controler/fetchFromDatabase.php');
+$obj = new DatabaseManager($pdo);
 
 // Call the manageReservation function
-manageReservation($pdo);
+$obj->manageReservation();
 
 if (isset($_GET["page"])) {
     $page = $_GET["page"];
@@ -28,35 +27,52 @@ $startNumberOfRestaurant = ($page - 1) * $restaurantPerPage;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $searchValue = $_POST['searchInput'];
     if (!empty($searchValue)) {
-        $searchValue = $searchValue . "%";
-        $query = "SELECT * FROM `restaurantowner` WHERE address LIKE :searchValue";
+        $query = "SELECT * FROM `restaurantowner` WHERE address LIKE :searchValueWithWildcard";
         $stmt = $pdo->prepare($query);
-        $stmt->bindParam(':searchValue', $searchValue, PDO::PARAM_STR);
+        $searchValueWithWildcard = $searchValue . '%'; // Add '%' only when executing the query
+         $stmt->bindParam(':searchValueWithWildcard', $searchValueWithWildcard, PDO::PARAM_STR);
         $stmt->execute();
+         // Add '%' to the searchValue only when executing the query
     } else {
         $query = "SELECT * FROM `restaurantowner`";
-        $stmt = $pdo->query($query);
+        $stmt2 = $pdo->query($query);
     }
 } else {
     $query = "SELECT * FROM `restaurantowner`";
-    $stmt = $pdo->query($query);
+    $stmt2 = $pdo->query($query);
 }
 
-$totalResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Calculate the total number of pages for pagination
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($searchValue)) {
+    $totalResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}else{
+    $totalResults = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+}
+
 $numberOfPage = ceil(count($totalResults) / $restaurantPerPage);
 
 $query .= " LIMIT :startNumberOfRestaurant, :restaurantPerPage";
-$stmt = $pdo->prepare($query);
-$stmt->bindParam(':startNumberOfRestaurant', $startNumberOfRestaurant, PDO::PARAM_INT);
-$stmt->bindParam(':restaurantPerPage', $restaurantPerPage, PDO::PARAM_INT);
-$stmt->execute();
-$result1 = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$stmt3 = $pdo->prepare($query);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($searchValue)) {
+    // Add '%' only when executing the query
+     $stmt3->bindParam(':searchValueWithWildcard', $searchValueWithWildcard, PDO::PARAM_STR);
+}
+   
+$stmt3->bindParam(':startNumberOfRestaurant', $startNumberOfRestaurant, PDO::PARAM_INT);
+$stmt3->bindParam(':restaurantPerPage', $restaurantPerPage, PDO::PARAM_INT);
 
 
 
+$stmt3->execute();
+$result1 = $stmt3->fetchAll(PDO::FETCH_ASSOC);
 
+// Display your results here...
 
+// Pagination controls can be added here based on $numberOfPage and $page variables.
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -127,7 +143,7 @@ if (count($result1) > 0) {
                     <h1 class="text-2xl font-semibold "><?=$restaurant["restaurantName"] ?></h1>
                     <p class="text-gray-600">Location: <?=$restaurant["address"] ?></p>
                     <?php
-                    $bookingPrice = fetchBookingPriceFromDatabase($restaurant['email'], $pdo);
+                    $bookingPrice = $obj->fetchBookingPriceFromDatabase($restaurant['email']);
                     ?>
                     <p class="text-gray-600">Booking Price: ₹ <?=$bookingPrice["min"] ?> - ₹ <?=$bookingPrice["max"] ?>
                     </p>
