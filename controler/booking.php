@@ -1,6 +1,10 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    include('../connect.php');
+    require_once('../connect.php');
+
+// Create a DatabaseConnection instance to establish the database connection.
+$database = new DatabaseConnection();
+$pdo = $database->getConnection();
     include('./fetchFromDatabase.php');
     $checkingDate = $_POST['checkingDate'];
     $checkingTime = $_POST['checkingTime'];
@@ -15,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     }
 
-    $restaurantTimes = fetchRestaurantTimesFromDatabase($restaurantId, $con);
+    $restaurantTimes = fetchRestaurantTimesFromDatabase($restaurantId, $pdo);
     $restaurantOpeningTime = strtotime($restaurantTimes['openingTime']);
     $restaurantClosingTime = strtotime($restaurantTimes['closingTime']);
 
@@ -25,42 +29,52 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($checkingTimeAfterConversion >= $restaurantOpeningTime && $checkoutTimeAfterConversion <= $restaurantClosingTime) {
         $query = "SELECT *
                   FROM `reservation`
-                  WHERE restaurantId = '$restaurantId'
-                  AND tableId = $tableId
-                  AND DATE(reservationDate) = DATE('$checkingDate')
+                  WHERE restaurantId = :restaurantId
+                  AND tableId = :tableId
+                  AND DATE(reservationDate) = :checkingDate
                   AND (
-                    (STR_TO_DATE(checkInTime, '%h:%i:%s %p') <= STR_TO_DATE('$checkingTime', '%h:%i:%s %p') AND STR_TO_DATE(checkOutTime, '%h:%i:%s %p') >= STR_TO_DATE('$checkingTime', '%h:%i:%s %p'))
+                    (STR_TO_DATE(checkInTime, '%h:%i:%s %p') <= STR_TO_DATE(:checkingTime, '%h:%i:%s %p') AND STR_TO_DATE(checkOutTime, '%h:%i:%s %p') >= STR_TO_DATE(:checkingTime, '%h:%i:%s %p'))
                     OR
-                    (STR_TO_DATE(checkInTime, '%h:%i:%s %p') >= STR_TO_DATE('$checkingTime', '%h:%i:%s %p') AND STR_TO_DATE(checkInTime, '%h:%i:%s %p') <= STR_TO_DATE('$checkoutTime', '%h:%i:%s %p'))
+                    (STR_TO_DATE(checkInTime, '%h:%i:%s %p') >= STR_TO_DATE(:checkingTime, '%h:%i:%s %p') AND STR_TO_DATE(checkInTime, '%h:%i:%s %p') <= STR_TO_DATE(:checkoutTime, '%h:%i:%s %p'))
                   )";
 
-        $result = mysqli_query($con, $query);
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(':restaurantId', $restaurantId);
+        $stmt->bindParam(':tableId', $tableId);
+        $stmt->bindParam(':checkingDate', $checkingDate);
+        $stmt->bindParam(':checkingTime', $checkingTime);
+        $stmt->bindParam(':checkoutTime', $checkoutTime);
+        $stmt->execute();
 
-        if (!$result) {
-            echo "Error executing the query: " . mysqli_error($con);
+        if ($stmt->rowCount() > 0) {
+            $msg = "The table is already booked for the selected time slot.";
+            header("Location: ../pages/bookingPage.php?restaurantId=$restaurantId&msg=$msg");
+            exit();
         } else {
-            if (mysqli_num_rows($result) > 0) {
-                $msg = "The table is already booked for the selected time slot.";
-                header("Location: ../pages/bookingPage.php?restaurantId=$restaurantId&msg=$msg");
-                exit();
-            } else {
-                
-                $priceQuery = "SELECT bookingPrice FROM tables WHERE id = $tableId ";
-                $priceResult = mysqli_query($con, $priceQuery);
-                $row = mysqli_fetch_assoc($priceResult);
-                $pricePerHour = $row['bookingPrice'];
-                $timeDifferenceInHours = ($checkoutTimeAfterConversion - $checkingTimeAfterConversion) / 3600;
-                $totalBookingPrice = $timeDifferenceInHours * $pricePerHour;
+            $priceQuery = "SELECT bookingPrice FROM tables WHERE id = :tableId";
+            $stmt = $pdo->prepare($priceQuery);
+            $stmt->bindParam(':tableId', $tableId);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $pricePerHour = $row['bookingPrice'];
+            $timeDifferenceInHours = ($checkoutTimeAfterConversion - $checkingTimeAfterConversion) / 3600;
+            $totalBookingPrice = $timeDifferenceInHours * $pricePerHour;
 
-                $insertQuery = "INSERT INTO `reservation` (restaurantId, userId, tableId, reservationDate, checkInTime, checkOutTime, bookingTime, totalBookingPrice)
-                                VALUES ('$restaurantId', '$userId', $tableId, '$checkingDate', '$checkingTime', '$checkoutTime', $timeDifferenceInHours, $totalBookingPrice)";
-                $result2 = mysqli_query($con, $insertQuery);
+            $insertQuery = "INSERT INTO `reservation` (restaurantId, userId, tableId, reservationDate, checkInTime, checkOutTime, bookingTime, totalBookingPrice)
+                            VALUES (:restaurantId, :userId, :tableId, :checkingDate, :checkingTime, :checkoutTime, :timeDifferenceInHours, :totalBookingPrice)";
+            $stmt = $pdo->prepare($insertQuery);
+            $stmt->bindParam(':restaurantId', $restaurantId);
+            $stmt->bindParam(':userId', $userId);
+            $stmt->bindParam(':tableId', $tableId);
+            $stmt->bindParam(':checkingDate', $checkingDate);
+            $stmt->bindParam(':checkingTime', $checkingTime);
+            $stmt->bindParam(':checkoutTime', $checkoutTime);
+            $stmt->bindParam(':timeDifferenceInHours', $timeDifferenceInHours);
+            $stmt->bindParam(':totalBookingPrice', $totalBookingPrice);
+            $stmt->execute();
 
-                if ($result2) {
-                    $msg = "Successfully Booked.";
-                    header("Location: ../pages/restaurantDetails.php?restaurantId=$restaurantId&msg=$msg");
-                }
-            }
+            $msg = "Successfully Booked.";
+            header("Location: ../pages/restaurantDetails.php?restaurantId=$restaurantId&msg=$msg");
         }
     } else {
         $msg = "Please select a valid time within the restaurant time.";
@@ -68,4 +82,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     }
 }
+
 ?>

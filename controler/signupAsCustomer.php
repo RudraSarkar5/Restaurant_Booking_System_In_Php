@@ -1,58 +1,67 @@
 <?php
-   if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    include "../connect.php";
-    $userName = $_POST['fullName'];                                                                                                                                                                                                                                                 
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    session_start();
+    require_once('../connect.php');
+
+    // Create a DatabaseConnection instance to establish the database connection.
+    $database = new DatabaseConnection();
+    $pdo = $database->getConnection();
+    $userName = $_POST['fullName'];
     $email = $_POST['email'];
     $phoneNumber = $_POST['phoneNumber'];
     $password = $_POST['password'];
-    print_r($_FILES);
     $fileName = $_FILES['profilePhoto']['name'];
-    $tempFile = $_FILES['profilePhoto']['tmp_name']; 
-    $folder = "../resourses/profilePhoto/".$fileName;
+    $tempFile = $_FILES['profilePhoto']['tmp_name'];
+    $folder = "../resourses/profilePhoto/" . $fileName;
 
-    if (empty($userName) || empty($email) || empty($phoneNumber) || empty($password)  ) {
+    if (empty($userName) || empty($email) || empty($phoneNumber) || empty($password)) {
         $msgforCustomer = "Please Fill All The Fields Properly";
         header("location:../pages/register.php?msgforCustomer=$msgforCustomer");
         exit();
     }
 
-    $existingQueryInCustomer = "select * from `user` where email ='$email'";
-    $existingQueryInRestaurantOwner = "select * from `restaurantOwner` where email ='$email'";
-       
-    $checkExistingAccountInCustomer = mysqli_query($con,$existingQueryInCustomer);
-    $checkExistingAccountInRestaurantOwner= mysqli_query($con,$existingQueryInRestaurantOwner);
-       
-    $numInCustomer = mysqli_num_rows($checkExistingAccountInCustomer);
-    $numInRestaurantOwner = mysqli_num_rows($checkExistingAccountInRestaurantOwner);
+    $existingQueryInCustomer = "SELECT * FROM `user` WHERE email = :email";
+    $existingQueryInRestaurantOwner = "SELECT * FROM `restaurantOwner` WHERE email = :email";
 
-    
-    
+    $stmt1 = $pdo->prepare($existingQueryInCustomer);
+    $stmt1->bindParam(':email', $email);
+    $stmt1->execute();
+
+    $stmt2 = $pdo->prepare($existingQueryInRestaurantOwner);
+    $stmt2->bindParam(':email', $email);
+    $stmt2->execute();
+
+    $numInCustomer = $stmt1->rowCount();
+    $numInRestaurantOwner = $stmt2->rowCount();
 
     if ($numInCustomer > 0 || $numInRestaurantOwner > 0) {
-        $msg = "User Already Exist.";
+        $msg = "User Already Exists.";
         header("location:../pages/register.php?msg=$msg");
         exit();
     } else {
-             if (empty($fileName)) {
-                $fileName = "customerUniversalPhoto.jpg";
-            } 
-            $sql = "INSERT INTO `user` (fullName,email,phoneNumber,password, profilePhoto) 
-            VALUES ('$userName', '$email',$phoneNumber,'$password', '$fileName')";
-            $result = mysqli_query($con, $sql);
+        if (empty($fileName)) {
+            $fileName = "customerUniversalPhoto.jpg";
+        }
+        $sql = "INSERT INTO `user` (fullName, email, phoneNumber, password, profilePhoto) 
+            VALUES (:userName, :email, :phoneNumber, :password, :fileName)";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':userName', $userName);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':phoneNumber', $phoneNumber);
+        $stmt->bindParam(':password', $password);
+        $stmt->bindParam(':fileName', $fileName);
+        $result = $stmt->execute();
 
-            if ($result) {
-                if($fileName != "customerUniversalPhoto.jpg"){
-                    move_uploaded_file($tempFile, $folder); 
-                }
-                session_start();
-                $_SESSION['userEmail'] = $email;
-                $_SESSION['loginStatus'] ="customer";
-                header('location:../pages/home.php');
-            } else {
-                die(mysqli_error($con));
+        if ($result) {
+            if ($fileName != "customerUniversalPhoto.jpg") {
+                move_uploaded_file($tempFile, $folder);
             }
+            $_SESSION['userEmail'] = $email;
+            $_SESSION['loginStatus'] = "customer";
+            header('location:../pages/home.php');
+        } else {
+            die($stmt->errorInfo());
         }
     }
-
-
+}
 ?>

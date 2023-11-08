@@ -1,52 +1,61 @@
 <?php
-    if ( $_SERVER['REQUEST_METHOD'] == 'POST'){
-        include "../connect.php";
-        $email = $_POST['email'];
-        $password = $_POST['password'];
 
-        if (empty($email) || empty($password)) {
-            $loginErrorMessage = "Please Fill All The Fields Properly";
-            
-        }else{
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    require_once('../connect.php');
 
-            $existingQueryInCustomer = "select * from `user` where email ='$email'";
-            $existingQueryInRestaurantOwner = "select * from `restaurantOwner` where email ='$email'";
-       
-            $checkExistingAccountInCustomer = mysqli_query($con,$existingQueryInCustomer);
-            $checkExistingAccountInRestaurantOwner= mysqli_query($con,$existingQueryInRestaurantOwner);
-       
-            $numInCustomer = mysqli_num_rows($checkExistingAccountInCustomer);
-            $numInRestaurantOwner = mysqli_num_rows($checkExistingAccountInRestaurantOwner);
+    // Create a DatabaseConnection instance to establish the database connection.
+    $database = new DatabaseConnection();
+    $pdo = $database->getConnection();
+    
+    $email = $_POST['email'];
+    $password = $_POST['password'];
 
-            if($numInCustomer > 0 ){
-                $row = mysqli_fetch_assoc($checkExistingAccountInCustomer);
-                $hashedPassword = $row['password'];
-                if($hashedPassword == $password){
-                    session_start();
-                    $_SESSION['userEmail'] = $email;
-                    $_SESSION['loginStatus'] ="customer";
-                    header('location:home.php');
-                }else{
-                    $loginErrorMessage = "Wrong password.";
-                }
-            }elseif( $numInRestaurantOwner > 0){
-                $row = mysqli_fetch_assoc($checkExistingAccountInRestaurantOwner);
-                $hashedPassword = $row['password'];
-                if($hashedPassword == $password){
-                    session_start();
-                    $_SESSION['userEmail'] = $email;
-                    $_SESSION['loginStatus'] ="restaurantOwner";
-                    header('location:home.php');
-                }else{
-                    $loginErrorMessage = "Wrong password.";
-                }
-            }else{
-                $loginErrorMessage = "Please Make An Account First.";
+    if (empty($email) || empty($password)) {
+        $loginErrorMessage = "Please Fill All The Fields Properly";
+    } else {
+        $existingQueryInCustomer = "SELECT * FROM `user` WHERE email = :email";
+        $existingQueryInRestaurantOwner = "SELECT * FROM `restaurantOwner` WHERE email = :email";
+
+        $stmt1 = $pdo->prepare($existingQueryInCustomer);
+        $stmt1->bindParam(':email', $email);
+        $stmt1->execute();
+
+        $stmt2 = $pdo->prepare($existingQueryInRestaurantOwner);
+        $stmt2->bindParam(':email', $email);
+        $stmt2->execute();
+
+        $numInCustomer = $stmt1->rowCount();
+        $numInRestaurantOwner = $stmt2->rowCount();
+
+        if ($numInCustomer > 0) {
+            $row = $stmt1->fetch(PDO::FETCH_ASSOC);
+            $hashedPassword = $row['password'];
+            if ($hashedPassword == $password) {
+                session_start();
+                $_SESSION['userEmail'] = $email;
+                $_SESSION['loginStatus'] = "customer";
+                header('location:home.php');
+            } else {
+                $loginErrorMessage = "Wrong password.";
             }
-        } 
-                
+        } elseif ($numInRestaurantOwner > 0) {
+            $row = $stmt2->fetch(PDO::FETCH_ASSOC);
+            $hashedPassword = $row['password'];
+            if ($hashedPassword == $password) {
+                session_start();
+                $_SESSION['userEmail'] = $email;
+                $_SESSION['loginStatus'] = "restaurantOwner";
+                header('location:home.php');
+            } else {
+                $loginErrorMessage = "Wrong password.";
+            }
+        } else {
+            $loginErrorMessage = "Please Make An Account First.";
+        }
     }
+}
 ?>
+
 
 
 <!DOCTYPE html>
@@ -62,7 +71,6 @@
 </head>
 
 <body class="main">
-
     <div class="flex items-center justify-center h-screen">
         <div class="bg-white bg-opacity-60 p-8 rounded-lg shadow-lg">
             <div class="flex flex-col justify-center items-center">
@@ -89,8 +97,8 @@
                 }
                 ?>
                 <div class='flex gap-2 items-center'>
-                    <h2 class="text-xl font-bold">If not have a Account?</h2>
-                    <a class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition-all"
+                    <h2 class="text-xl font-bold">If not have an Account?</h2>
+                    <a class="bg-blue-500 text-white p-2 rounded hover-bg-blue-600 transition-all"
                         href="register.php">register</a>
                 </div>
             </form>

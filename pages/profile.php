@@ -1,17 +1,21 @@
 <?php
     include('./nav.php');
-    include ("../connect.php");
+    require_once('../connect.php');
+
+    // Create a DatabaseConnection instance to establish the database connection.
+    $database = new DatabaseConnection();
+    $pdo = $database->getConnection();
     include('../controler/fetchFromDatabase.php');
     if((!$_SESSION['userEmail'])){
       header("location:./login.php");
     }
-    manageReservation($con);
+    manageReservation($pdo);
     
     $restaurantId = $_GET['restaurantId'];
     
-    $user = fetchProfileDetailsFromDatabase($restaurantId,$con);
+    $user = fetchProfileDetailsFromDatabase($restaurantId,$pdo);
     
-    $bookingList = fetchTotalBookingFromDatabase($restaurantId,$con);
+    $bookingList = fetchTotalBookingFromDatabase($restaurantId,$pdo);
 
 ?>
 
@@ -109,7 +113,7 @@
                                             <td class="lg:p-4 md:p-4 p-2 text-center border">
                                                 <?php
                                       $id = $bookingList[$i]['restaurantId'];
-                                      $user = fetchRestaurantNameFromDatabase($id,$con);
+                                      $user = fetchRestaurantNameFromDatabase($id,$pdo);
                                     ?>
 
 

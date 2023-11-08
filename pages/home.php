@@ -1,43 +1,61 @@
 <?php
-    include('./nav.php');
-    include('../connect.php');
-    include('../controler/fetchFromDatabase.php');
-    manageReservation($con);
-    if(isset($_GET["page"])){
-      $page = $_GET["page"];
-    }else{
-      $page = 1;
-    }
-    $restaurantPerPage = 6;
-    $startNumberOfRestaurant = ($page - 1) * $restaurantPerPage;
-    
-    
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+
+include('./nav.php');
+
+// Include the DatabaseConnection class file
+require_once('../connect.php');
+
+// Create a DatabaseConnection instance to establish the database connection.
+$database = new DatabaseConnection();
+$pdo = $database->getConnection();
+
+// Include the fetchFromDatabase function
+include('../controler/fetchFromDatabase.php');
+
+// Call the manageReservation function
+manageReservation($pdo);
+
+if (isset($_GET["page"])) {
+    $page = $_GET["page"];
+} else {
+    $page = 1;
+}
+
+$restaurantPerPage = 6;
+$startNumberOfRestaurant = ($page - 1) * $restaurantPerPage;
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $searchValue = $_POST['searchInput'];
     if (!empty($searchValue)) {
-       
-        $query = "SELECT * FROM `restaurantowner` WHERE address LIKE '" . $searchValue . "%'";
+        $searchValue = $searchValue . "%";
+        $query = "SELECT * FROM `restaurantowner` WHERE address LIKE :searchValue";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(':searchValue', $searchValue, PDO::PARAM_STR);
+        $stmt->execute();
     } else {
-        
         $query = "SELECT * FROM `restaurantowner`";
+        $stmt = $pdo->query($query);
     }
 } else {
     $query = "SELECT * FROM `restaurantowner`";
+    $stmt = $pdo->query($query);
 }
 
+$totalResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$numberOfPage = ceil(count($totalResults) / $restaurantPerPage);
 
-$totalResults = mysqli_query($con, $query);
+$query .= " LIMIT :startNumberOfRestaurant, :restaurantPerPage";
+$stmt = $pdo->prepare($query);
+$stmt->bindParam(':startNumberOfRestaurant', $startNumberOfRestaurant, PDO::PARAM_INT);
+$stmt->bindParam(':restaurantPerPage', $restaurantPerPage, PDO::PARAM_INT);
+$stmt->execute();
+$result1 = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
-$numberOfPage = ceil(mysqli_num_rows($totalResults) / $restaurantPerPage);
 
 
-$query .= " LIMIT $startNumberOfRestaurant, $restaurantPerPage";
 
-
-$result1 = mysqli_query($con, $query);
-
- 
 ?>
 
 <!DOCTYPE html>
@@ -87,33 +105,36 @@ $result1 = mysqli_query($con, $query);
         <div class=" mt-5 flex  mb-20 flex-wrap gap-5 justify-center items-center w-full">
 
             <?php
-        if(mysqli_num_rows($result1) > 0){
-          foreach($result1 as $restaurant){
-           $restaurantOwnerEmail = $restaurant["email"];
-            $query2 = "select * from `restaurantimages` where restaurantId = '$restaurantOwnerEmail'";
-            $result2 = mysqli_query($con,$query2);
-            $restaurantFirstImage = mysqli_fetch_array($result2);
+if (count($result1) > 0) {
+    foreach ($result1 as $restaurant) {
+        $restaurantOwnerEmail = $restaurant["email"];
+        $query2 = "SELECT * FROM `restaurantimages` WHERE restaurantId = :restaurantOwnerEmail";
+        $stmt2 = $pdo->prepare($query2);
+        $stmt2->bindParam(':restaurantOwnerEmail', $restaurantOwnerEmail, PDO::PARAM_STR);
+        $stmt2->execute();
+        $restaurantFirstImage = $stmt2->fetch(PDO::FETCH_ASSOC);
+
+        if ($restaurantFirstImage) {
             $firstImageName = $restaurantFirstImage['imageName'];
-       ?>
+            ?>
             <div
-                class="bg-gray-100 flex-col justify-center items-center  w-full md:w-[25%] lg:w-[27%] h-[400px] mx-6 mb-8 p-2">
-                <div class="image-container mx-auto  ">
-                    <img class=" mx-auto overflow-hidden" src="../resourses/restaurantImages/<?=$firstImageName ?>"
+                class="bg-gray-100 flex-col justify-center items-center w-full md:w-[25%] lg:w-[27%] h-[400px] mx-6 mb-8 p-2">
+                <div class="image-container mx-auto">
+                    <img class="mx-auto overflow-hidden" src="../resourses/restaurantImages/<?=$firstImageName ?>"
                         alt=<?=$firstImageName ?> />
                 </div>
-
                 <div class="p-4 flex justify-center items-center flex-col">
                     <h1 class="text-2xl font-semibold "><?=$restaurant["restaurantName"] ?></h1>
                     <p class="text-gray-600">Location: <?=$restaurant["address"] ?></p>
                     <?php
-        $bookingPrice = fetchBookingPriceFromDatabase($restaurant['email'], $con);
-      ?>
+                    $bookingPrice = fetchBookingPriceFromDatabase($restaurant['email'], $pdo);
+                    ?>
                     <p class="text-gray-600">Booking Price: ₹ <?=$bookingPrice["min"] ?> - ₹ <?=$bookingPrice["max"] ?>
                     </p>
                     <?php
-        $openingTime = date("g a", strtotime($restaurant["openingTime"]));
-        $closingTime = date("g a", strtotime($restaurant["closingTime"]));
-      ?>
+                    $openingTime = date("g a", strtotime($restaurant["openingTime"]));
+                    $closingTime = date("g a", strtotime($restaurant["closingTime"]));
+                    ?>
                     <p class="text-gray-600">Timing: <?=$openingTime?> to <?=$closingTime?> </p>
                     <div class="my-4 flex justify-center">
                         <a href="restaurantDetails.php?restaurantId=<?=$restaurant['email']?>"
@@ -121,16 +142,14 @@ $result1 = mysqli_query($con, $query);
                             View Details
                         </a>
                     </div>
-
                 </div>
             </div>
-
-
-
-            <?php  
-   }
-  }  
+            <?php
+        }
+    }
+}
 ?>
+
         </div>
 
         <?php

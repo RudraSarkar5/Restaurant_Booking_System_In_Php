@@ -1,21 +1,22 @@
 <?php 
     include('./nav.php');
-    include ("../connect.php");
-    include('../controler/fetchFromDatabase.php');
-    $restaurantId = $_GET['restaurantId'];
+require_once('../connect.php');
 
-    if (isset($_GET['menuId'])) {
-      $menuId = $_GET['menuId']; 
-      $menuDetails = fetchMenuDetailsFromDatabase($menuId,$con);
-      
-    } 
-  
-  
-    
-    $allFoodMenu =  fetchFoodMenuFromDatabase($restaurantId,$con);
-    
-    
-    $restaurant = fetchRestaurantDetailsFromDatabase($restaurantId,$con);
+// Create a DatabaseConnection instance to establish the database connection.
+$database = new DatabaseConnection();
+$pdo = $database->getConnection();
+include('../controler/fetchFromDatabase.php');
+
+$restaurantId = $_GET['restaurantId'];
+
+if (isset($_GET['menuId'])) {
+    $menuId = $_GET['menuId'];
+    $menuDetails = fetchMenuDetailsFromDatabase($menuId, $pdo); // Replace $con with $pdo
+}
+
+$allFoodMenu = fetchFoodMenuFromDatabase($restaurantId, $pdo); // Replace $con with $pdo
+$restaurant = fetchRestaurantDetailsFromDatabase($restaurantId, $pdo); // Replace $con with $pdo
+
     
 ?>
 

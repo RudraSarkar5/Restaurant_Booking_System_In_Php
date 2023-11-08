@@ -1,19 +1,24 @@
 <?php 
 
-    include ("../connect.php");
+   require_once('../connect.php');
 
-    $restaurantId = $_GET['restaurantId'];
-    $menuId = $_GET['menuId'];
-    $sql = "DELETE FROM `foodmenu` WHERE id = $menuId";
+// Create a DatabaseConnection instance to establish the database connection.
+$database = new DatabaseConnection();
+$pdo = $database->getConnection();
 
-    $result = mysqli_query($con, $sql);
 
-            if ($result) { 
-                header('Location: ../pages/addMenu.php?restaurantId=' . $restaurantId);
-            } else {
-                die(mysqli_error($con));
-            }
+$restaurantId = $_GET['restaurantId'];
+$menuId = $_GET['menuId'];
 
+$sql = "DELETE FROM `foodmenu` WHERE id = :menuId";
+$stmt = $pdo->prepare($sql);
+$stmt->bindParam(':menuId', $menuId, PDO::PARAM_INT);
+$result = $stmt->execute();
+
+if ($result) {
+    header('Location: ../pages/addMenu.php?restaurantId=' . $restaurantId);
+} 
+   
    
   
   

@@ -2,211 +2,274 @@
     
     
     
-    function fetchRestaurantDetailsFromDatabase ($restaurantId,$con){
-        $restaurantQuery = "SELECT * FROM `restaurantowner` WHERE email = '$restaurantId'";
-        $restaurantResult = mysqli_query($con,$restaurantQuery);
-        $restaurant = mysqli_fetch_assoc($restaurantResult);
-        return $restaurant;
-    }
+    function fetchRestaurantDetailsFromDatabase($restaurantId, $pdo)
+{
+    $restaurantQuery = "SELECT * FROM restaurantowner WHERE email = :restaurantId";
+    $stmt = $pdo->prepare($restaurantQuery);
+    $stmt->bindParam(':restaurantId', $restaurantId, PDO::PARAM_STR);
+    $stmt->execute();
+    $restaurant = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    function fetchProfileDetailsFromDatabase ($userId,$con){
-        $userQuery = "SELECT * FROM `user` WHERE email = '$userId'";
-        $userResult = mysqli_query($con,$userQuery);
-        $user = mysqli_fetch_assoc($userResult);
-        return $user;
-    }
+    return $restaurant;
+}
+
+    function fetchProfileDetailsFromDatabase($userId, $pdo) {
+    $userQuery = "SELECT * FROM `user` WHERE email = :userId";
+
+    $stmt = $pdo->prepare($userQuery);
+    $stmt->bindParam(':userId', $userId);
+    $stmt->execute();
+
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $user;
+}
+
 
     
-    function fetchImagesForRestaurantFromDatabase ($restaurantId,$con){
-        $imagesQuery = "SELECT * FROM `restaurantimages` WHERE restaurantId = '$restaurantId'";
-        $imagesResult = mysqli_query($con, $imagesQuery);
-        $images = []; 
+    function fetchImagesForRestaurantFromDatabase($restaurantId, $pdo)
+{
+    $imagesQuery = "SELECT imageName FROM restaurantimages WHERE restaurantId = :restaurantId";
+    $stmt = $pdo->prepare($imagesQuery);
+    $stmt->bindParam(':restaurantId', $restaurantId, PDO::PARAM_STR);
+    $stmt->execute();
 
-        while ($row = mysqli_fetch_assoc($imagesResult)) {
-            $images[] = $row['imageName']; 
-        }
-        return $images;
+    $images = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $images[] = $row['imageName'];
     }
 
-    function fetchFoodMenuFromDatabase ($restaurantId,$con){
-        $restaurantQuery = "SELECT * FROM `foodmenu` WHERE restaurantId = '$restaurantId'";
-        $restaurantResult = mysqli_query($con,$restaurantQuery);
+    return $images;
+}
 
-        $menuList = []; 
-        while ($row = mysqli_fetch_assoc($restaurantResult)) {
-            $menuList[] = $row ; 
-        }
-        return $menuList;
+    function fetchFoodMenuFromDatabase($restaurantId, $pdo)
+{
+    $menuList = [];
+
+    $foodMenuQuery = "SELECT * FROM foodmenu WHERE restaurantId = :restaurantId";
+    $stmt = $pdo->prepare($foodMenuQuery);
+    $stmt->bindParam(':restaurantId', $restaurantId, PDO::PARAM_STR);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $menuList[] = $row;
     }
+
+    return $menuList;
+}
+
+
     
-    function fetchMenuDetailsFromDatabase ($menuId,$con){
-        $restaurantQuery = "SELECT * FROM `foodmenu` WHERE id = $menuId";
-        $restaurantResult = mysqli_query($con,$restaurantQuery);
-        $menuDetails = mysqli_fetch_assoc($restaurantResult);
-        return $menuDetails;
-    }
-    function fetchAllRestaurantFromDatabase ($con){
-        $restaurantQuery = "SELECT * FROM `restaurantowner`";
-        $restaurantResult = mysqli_query($con,$restaurantQuery);
-        
-        return $restaurantResult;
-    }
+    function fetchMenuDetailsFromDatabase($menuId, $pdo) {
+    $sql = "SELECT * FROM `foodmenu` WHERE id = :menuId";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':menuId', $menuId);
+    $stmt->execute();
+    $menuDetails = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $menuDetails;
+}
 
-    function fetchTablesFromDatabase ($restaurantId,$con){
-        $restaurantQuery = "SELECT * FROM `tables` WHERE restaurantId = '$restaurantId'";
-        $tableResult = mysqli_query($con,$restaurantQuery);
-
-        $tableList = []; 
-        while ($row = mysqli_fetch_assoc($tableResult)) {
-            $tableList[] = $row ; 
-        }
-        return $tableList;
-    }
-
-    function fetchtableDetailsFromDatabase ($tableId,$con){
-        $restaurantQuery = "SELECT * FROM `tables` WHERE id = $tableId";
-        $restaurantResult = mysqli_query($con,$restaurantQuery);
-        $menuDetails = mysqli_fetch_assoc($restaurantResult);
-        return $menuDetails;
-    }
-
-
-    function fetchBookingPriceFromDatabase($restaurantId, $con) {
-        $restaurantQuery = "SELECT * FROM `tables` WHERE restaurantId = '$restaurantId'";
-        $tableResult = mysqli_query($con, $restaurantQuery);
+    function fetchAllRestaurantFromDatabase($pdo) {
+    $restaurantQuery = "SELECT * FROM `restaurantowner`";
+    $statement = $pdo->prepare($restaurantQuery);
+    $statement->execute();
+    $restaurants = $statement->fetchAll(PDO::FETCH_ASSOC);
     
-        if ($tableResult) {
-            $minBookingPrice = PHP_INT_MAX; 
-            $maxBookingPrice = 0; 
-    
-            while ($table = mysqli_fetch_assoc($tableResult)) {
-                
-                $bookingPrice = $table['bookingPrice'];
-    
-                if ($bookingPrice < $minBookingPrice) {
-                    $minBookingPrice = $bookingPrice;
-                }
-    
-                if ($bookingPrice > $maxBookingPrice) {
-                    $maxBookingPrice = $bookingPrice;
-                }
+    return $restaurants;
+}
+
+
+    function fetchTablesFromDatabase($restaurantId, $pdo)
+{
+    $restaurantQuery = "SELECT * FROM tables WHERE restaurantId = :restaurantId";
+    $stmt = $pdo->prepare($restaurantQuery);
+    $stmt->bindParam(':restaurantId', $restaurantId, PDO::PARAM_STR);
+    $stmt->execute();
+    $tableList = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $tableList[] = $row;
+    }
+
+    return $tableList;
+}
+
+
+    function fetchTableDetailsFromDatabase($tableId, $pdo) {
+    $sql = "SELECT * FROM `tables` WHERE id = :tableId";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':tableId', $tableId, PDO::PARAM_INT);
+    $stmt->execute();
+    $tableDetails = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $tableDetails;
+}
+
+
+    function fetchBookingPriceFromDatabase($restaurantId, $pdo) {
+    $restaurantQuery = "SELECT * FROM `tables` WHERE restaurantId = :restaurantId";
+    $stmt = $pdo->prepare($restaurantQuery);
+    $stmt->bindParam(':restaurantId', $restaurantId, PDO::PARAM_STR);
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+        $minBookingPrice = PHP_INT_MAX;
+        $maxBookingPrice = 0;
+
+        while ($table = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $bookingPrice = $table['bookingPrice'];
+
+            if ($bookingPrice < $minBookingPrice) {
+                $minBookingPrice = $bookingPrice;
             }
-            if($minBookingPrice == PHP_INT_MAX){
-                $minBookingPrice = 0;
+
+            if ($bookingPrice > $maxBookingPrice) {
+                $maxBookingPrice = $bookingPrice;
             }
-    
-            return array('min' => $minBookingPrice, 'max' => $maxBookingPrice);
-        } else {
-            
-            return array('min' => 0, 'max' => 0);
         }
+
+        if ($minBookingPrice == PHP_INT_MAX) {
+            $minBookingPrice = 0;
+        }
+
+        return array('min' => $minBookingPrice, 'max' => $maxBookingPrice);
+    } else {
+        return array('min' => 0, 'max' => 0);
     }
-    
-    
-    
-    function fetchCommentsFromDatabase ($restaurantId,$con){
-        $commentsQuery = "SELECT * FROM `comments` WHERE restaurantId = '$restaurantId' ORDER BY createdAt DESC ";
-        $commentsResult = mysqli_query($con,$commentsQuery);
-
-        $commentsList = []; 
-        while ($row = mysqli_fetch_assoc($commentsResult)) {
-            $commentsList[] = $row ; 
-        }
-        return $commentsList;
-    }
+}
 
     
-    function fetchBookingStatusFromDatabase ($restaurantId,$con){
-        $bookingQuery = "SELECT * FROM `reservation` WHERE restaurantId = '$restaurantId'  ";
-        $bookingResult = mysqli_query($con,$bookingQuery);
+    
+    
+    function fetchCommentsFromDatabase($restaurantId, $pdo)
+{
+    $commentsQuery = "SELECT * FROM comments WHERE restaurantId = :restaurantId ORDER BY createdAt DESC";
+    $stmt = $pdo->prepare($commentsQuery);
+    $stmt->bindParam(':restaurantId', $restaurantId, PDO::PARAM_STR);
+    $stmt->execute();
+    $commentsList = [];
 
-        $reservationList = []; 
-        while ($row = mysqli_fetch_assoc($bookingResult)) {
-            $reservationList[] = $row ; 
-        }
-        return $reservationList;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $commentsList[] = $row;
     }
 
-    
-    function fetchTotalBookingFromDatabase ($customerId,$con){
-        $bookingQuery = "SELECT * FROM `reservation` WHERE userId = '$customerId'  ";
-        $bookingResult = mysqli_query($con,$bookingQuery);
+    return $commentsList;
+}
 
-        $reservationList = []; 
-        while ($row = mysqli_fetch_assoc($bookingResult)) {
-            $reservationList[] = $row ; 
-        }
-        return $reservationList;
+
+    
+    function fetchBookingStatusFromDatabase($restaurantId, $pdo)
+{
+    $bookingQuery = "SELECT * FROM reservation WHERE restaurantId = :restaurantId";
+    $stmt = $pdo->prepare($bookingQuery);
+    $stmt->bindParam(':restaurantId', $restaurantId,PDO::PARAM_STR);
+    $stmt->execute();
+
+    $reservationList = [];
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $reservationList[] = $row;
+    }
+    return $reservationList;
+}
+
+
+    
+    function fetchTotalBookingFromDatabase($customerId, $pdo) {
+    $bookingQuery = "SELECT * FROM `reservation` WHERE userId = :customerId";
+    
+    $stmt = $pdo->prepare($bookingQuery);
+    $stmt->bindParam(':customerId', $customerId);
+    $stmt->execute();
+    
+    $reservationList = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $reservationList[] = $row;
     }
 
+    return $reservationList;
+}
+
+
     
-    function fetchCustomerNameFromDatabase ($restaurantId,$con){
-        $sqlQ = "SELECT fullName , phoneNumber FROM `user` WHERE email = '$restaurantId'";
-        $userNameResult = mysqli_query($con, $sqlQ);
-        $userNameRow = mysqli_fetch_assoc($userNameResult);
-        
+   function fetchCustomerNameFromDatabase($restaurantId, $pdo) {
+    $query = "SELECT fullName, phoneNumber FROM user WHERE email = :restaurantId";
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':restaurantId', $restaurantId, PDO::PARAM_STR);
+    $stmt->execute();
+
+    if ($stmt) {
+        $userNameRow = $stmt->fetch(PDO::FETCH_ASSOC);
         return $userNameRow;
     }
 
+    return null;
+}
+
+
     
-    function fetchRestaurantNameFromDatabase ($restaurantId,$con){
-        $sqlQ = "SELECT * FROM `restaurantowner` WHERE email = '$restaurantId'";
-        $userNameResult = mysqli_query($con, $sqlQ);
-        $userNameRow = mysqli_fetch_assoc($userNameResult);
-        
+    function fetchRestaurantNameFromDatabase($restaurantId, $pdo) {
+    $query = "SELECT * FROM restaurantowner WHERE email = :restaurantId";
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':restaurantId', $restaurantId, PDO::PARAM_STR);
+    $stmt->execute();
+
+    if ($stmt) {
+        $userNameRow = $stmt->fetch(PDO::FETCH_ASSOC);
         return $userNameRow;
     }
 
-    function fetchRestaurantTimesFromDatabase($restaurantId, $con) {
-    
-            $query = "SELECT openingTime, closingTime FROM restaurantowner WHERE email = '$restaurantId'";
-    
-    
-            $result = mysqli_query($con, $query);
-    
-            if ($result) {
-        
-                if (mysqli_num_rows($result) > 0) {
-                    $row = mysqli_fetch_assoc($result);
-                    $openingTime = $row['openingTime'];
-                    $closingTime = $row['closingTime'];
+    return null;
+}
 
-                }
-       
-            
-            
-                return array("openingTime" => $openingTime, "closingTime" => $closingTime);
-            } 
-            
-                
+
+    function fetchRestaurantTimesFromDatabase($restaurantId, $pdo) {
+    $query = "SELECT openingTime, closingTime FROM restaurantowner WHERE email = :restaurantId";
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':restaurantId', $restaurantId, PDO::PARAM_STR);
+    $stmt->execute();
+
+    if ($stmt) {
+        if ($stmt->rowCount() > 0) {
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $openingTime = $row['openingTime'];
+            $closingTime = $row['closingTime'];
         }
 
+        return array("openingTime" => $openingTime, "closingTime" => $closingTime);
+    }
+    
+    return array("openingTime" => null, "closingTime" => null);
+}
+
+
        
 
-    function manageReservation($con){
-        $sql = "DELETE FROM `reservation` WHERE reservationDate < CURDATE() OR (reservationDate = CURDATE() AND checkOutTime < CURTIME())";
-        $result = mysqli_query($con, $sql);
-        
-    }
-
-    function fetchAllTheRowIfTableExistInReservation($con,$tableId){
-        $sql = "SELECT * FROM `reservation`  WHERE tableId = $tableId ";
-         $result = mysqli_query($con, $sql);
-         return $result;
-    }
-
+     function manageReservation($pdo) {
     
     
+    $sql = "DELETE FROM `reservation` WHERE reservationDate < CURDATE() OR (reservationDate = CURDATE() AND checkOutTime < CURTIME())";
+    $stmt = $pdo->prepare($sql);
+    
+    try {
+        $stmt->execute();
+    } catch (PDOException $e) {
+        // Handle any potential errors here
+        die("Error: " . $e->getMessage());
+    }
+}
 
-   
 
+    function fetchAllTheRowIfTableExistInReservation($pdo, $tableId) {
+    $sql = "SELECT * FROM `reservation` WHERE tableId = :tableId";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':tableId', $tableId);
+    $stmt->execute();
 
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
-
-
-
-
+    return $results;
+}
 
 
 

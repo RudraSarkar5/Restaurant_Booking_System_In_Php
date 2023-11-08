@@ -1,19 +1,25 @@
 <?php
-    include('./nav.php');
-    include ("../connect.php");
-    include('../controler/fetchFromDatabase.php');
-    manageReservation($con);
-    if((!$_SESSION['userEmail'])){
-      header("location:./login.php");
-    }
+   include('./nav.php');
+require_once('../connect.php');
 
-    $restaurantId = $_GET['restaurantId'];
-    
-    $restaurant = fetchRestaurantDetailsFromDatabase($restaurantId,$con);
-    $allFoodMenu =  fetchFoodMenuFromDatabase($restaurantId,$con);
-    $images = fetchImagesForRestaurantFromDatabase($restaurantId,$con);
-    $allReview = fetchCommentsFromDatabase($restaurantId,$con);
-    $tableList =  fetchTablesFromDatabase($restaurantId,$con);
+// Create a DatabaseConnection instance to establish the database connection.
+$database = new DatabaseConnection();
+$pdo = $database->getConnection();
+include('../controler/fetchFromDatabase.php');
+manageReservation($pdo); // Replace $con with $pdo for PDO usage
+
+if (!isset($_SESSION['userEmail'])) {
+    header("location:./login.php");
+}
+
+$restaurantId = $_GET['restaurantId'];
+
+$restaurant = fetchRestaurantDetailsFromDatabase($restaurantId, $pdo);
+$allFoodMenu = fetchFoodMenuFromDatabase($restaurantId, $pdo);
+$images = fetchImagesForRestaurantFromDatabase($restaurantId, $pdo);
+$allReview = fetchCommentsFromDatabase($restaurantId, $pdo);
+$tableList = fetchTablesFromDatabase($restaurantId, $pdo);
+
 
 ?>
 
@@ -67,7 +73,7 @@
                         <div class="md:w-1/2 lg:w-1/2 w-full p-4 flex flex-col justify-center items-center">
                             <h1 class="text-3xl font-semibold text-blue-500"><?=$restaurant['restaurantName']?></h1>
                             <?php
-                $bookingPrice = fetchBookingPriceFromDatabase($restaurant['email'],$con);
+                $bookingPrice = fetchBookingPriceFromDatabase($restaurant['email'],$pdo);
             ?>
                             <p class="text-lg">Price of Reservation: ₹ <?=$bookingPrice["min"] ?> - ₹
                                 <?=$bookingPrice["max"] ?></p>

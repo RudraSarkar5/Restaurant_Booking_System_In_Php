@@ -1,32 +1,44 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    include('../connect.php');
+    require_once('../connect.php');
+
+    // Create a DatabaseConnection instance to establish the database connection.
+    $database = new DatabaseConnection();
+    $pdo = $database->getConnection();
+    session_start();
     $comment = $_POST['comment'];
     $restaurantId = $_POST['restaurantId'];
-    session_start();
     $email = $_SESSION['userEmail'];
 
     if ($_SESSION['loginStatus'] == "restaurantOwner") {
-        $sqlQ = "SELECT ownerName FROM `restaurantowner` WHERE email = '$email'";
-        $userNameResult = mysqli_query($con, $sqlQ);
-        $userNameRow = mysqli_fetch_assoc($userNameResult);
+        $sqlQ = "SELECT ownerName FROM `restaurantowner` WHERE email = :email";
+        $userNameResult = $pdo->prepare($sqlQ);
+        $userNameResult->bindParam(':email', $email);
+        $userNameResult->execute();
+        $userNameRow = $userNameResult->fetch(PDO::FETCH_ASSOC);
         $userName = $userNameRow['ownerName'];
-    } else if($_SESSION['loginStatus'] == "customer"){
-        $sqlQ = "SELECT fullName FROM `user` WHERE email = '$email'";
-        $userNameResult = mysqli_query($con, $sqlQ);
-        $userNameRow = mysqli_fetch_assoc($userNameResult);
+    } elseif ($_SESSION['loginStatus'] == "customer") {
+        $sqlQ = "SELECT fullName FROM `user` WHERE email = :email";
+        $userNameResult = $pdo->prepare($sqlQ);
+        $userNameResult->bindParam(':email', $email);
+        $userNameResult->execute();
+        $userNameRow = $userNameResult->fetch(PDO::FETCH_ASSOC);
         $userName = $userNameRow['fullName'];
-    }else{
+    } else {
         header("location:../pages/login.php");
         exit();
     }
 
-    $sqlQ2 = "INSERT INTO `comments` (text, userName, restaurantId) VALUES ('$comment', '$userName', '$restaurantId')";
-    $result = mysqli_query($con, $sqlQ2);
+    $sqlQ2 = "INSERT INTO `comments` (text, userName, restaurantId) VALUES (:comment, :userName, :restaurantId)";
+    $stmt = $pdo->prepare($sqlQ2);
+    $stmt->bindParam(':comment', $comment);
+    $stmt->bindParam(':userName', $userName);
+    $stmt->bindParam(':restaurantId', $restaurantId);
+    $result = $stmt->execute();
 
     if ($result) {
         header("Location: ../pages/restaurantDetails.php?restaurantId=$restaurantId");
-        exit; 
+        exit;
     }
 }
 ?>

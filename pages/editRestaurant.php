@@ -1,6 +1,10 @@
 <?php
     include('./nav.php');
-    include ("../connect.php");
+   require_once('../connect.php');
+
+// Create a DatabaseConnection instance to establish the database connection.
+$database = new DatabaseConnection();
+$pdo = $database->getConnection();
     include('../controler/fetchFromDatabase.php');
 
     $restaurantId = $_GET['restaurantId'];
@@ -9,7 +13,7 @@
           $msg = $_GET['msg'];
      }
     
-    $restaurant = fetchRestaurantDetailsFromDatabase($restaurantId,$con);
+    $restaurant = fetchRestaurantDetailsFromDatabase($restaurantId,$pdo);
     
 
 ?>

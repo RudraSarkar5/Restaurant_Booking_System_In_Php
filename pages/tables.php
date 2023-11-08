@@ -1,22 +1,22 @@
 <?php 
     include('./nav.php');
-    include ("../connect.php");
-    include('../controler/fetchFromDatabase.php');
+require_once('../connect.php');
 
-    $restaurantId = $_GET['restaurantId'];
+// Create a DatabaseConnection instance to establish the database connection.
+$database = new DatabaseConnection();
+$pdo = $database->getConnection();
+include('../controler/fetchFromDatabase.php');
 
-    if (isset($_GET['tableId'])) {
-      $tableId = $_GET['tableId']; 
-      $tableDetails = fetchtableDetailsFromDatabase($tableId,$con);
-      
-    } 
-  
-  
-    
-    $tableList =  fetchTablesFromDatabase($restaurantId,$con);
-    
-    
-    $restaurant = fetchRestaurantDetailsFromDatabase($restaurantId,$con);
+$restaurantId = $_GET['restaurantId'];
+
+if (isset($_GET['tableId'])) {
+    $tableId = $_GET['tableId'];
+    $tableDetails = fetchTableDetailsFromDatabase($tableId, $pdo); // Replace $con with $pdo
+}
+
+$tableList = fetchTablesFromDatabase($restaurantId, $pdo); // Replace $con with $pdo
+$restaurant = fetchRestaurantDetailsFromDatabase($restaurantId, $pdo); // Replace $con with $pdo
+
     
 ?>
 
@@ -100,8 +100,8 @@
                                         <td class=" p-2 border">₹ <?=$tableList[$i]['bookingPrice']?></td>
                                         <?php
                                         $tableId = $tableList[$i]['id'];
-                                        $resutl = fetchAllTheRowIfTableExistInReservation($con,$tableId);
-                        if(mysqli_num_rows($resutl) < 1){
+                                        $resutl = fetchAllTheRowIfTableExistInReservation($pdo,$tableId);
+                        if(count($resutl) < 1){
                             ?>
                                         <td class=" p-2 border flex gap-3">
                                             <a href="tables.php?restaurantId=<?=$restaurantId?>&tableId=<?=$tableList[$i]['id']?>"

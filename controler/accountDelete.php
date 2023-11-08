@@ -2,41 +2,57 @@
 include('../connect.php');
 include('./fetchFromDatabase.php');
 
-
-
 if (isset($_GET['restaurantId']) && isset($_GET['account'])) {
     $restaurantId = $_GET['restaurantId'];
    
-    if($_GET['account'] == 'restaurant'){
-        $images[] = fetchImagesForRestaurantFromDatabase($restaurantId,$con);
-        $query1 = "DELETE * FROM `restaurantimages` where email = '$restaurantId'";
-        $result1 = mysqli_query($con,$query1);
-        if ( $result1){
-          for ( $i = 0; $i < count($images); $i++){
-                  $fileName = $images[$i];
-                  unlink('../resourses/restaurantImages/'.$fileName);  
-          }
-        } 
-        
-        $sqlQ= "DELETE FROM `restaurantowner` WHERE email = '$restaurantId'";
-        $result = mysqli_query($con,$sqlQ);
-   }else{
-        $query1 = "SELECT profilePhoto from `user` where email = '$restaurantId'";
-        $result = mysqli_query($con,$query1);
-        $row = mysqli_fetch_assoc($result);
-        $fileName = $row['profilePhoto'];
-        if ( $fileName != 'customerUniversalPhoto.jpg'){
-          unlink('../resourses/profilePhoto/'.$fileName);
+    try {
+        $pdo = new PDO("mysql:host=$db_host;dbname=$db_name", $db_user, $db_password);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        if ($_GET['account'] == 'restaurant') {
+            $images = fetchImagesForRestaurantFromDatabase($restaurantId, $pdo);
+            
+            $query1 = "DELETE FROM `restaurantimages` WHERE email = :restaurantId";
+            $stmt1 = $pdo->prepare($query1);
+            $stmt1->bindParam(':restaurantId', $restaurantId);
+            $stmt1->execute();
+            
+            if ($stmt1->rowCount() > 0) {
+                foreach ($images as $image) {
+                    $fileName = $image;
+                    unlink('../resourses/restaurantImages/' . $fileName);
+                }
+            }
+
+            $sqlQ = "DELETE FROM `restaurantowner` WHERE email = :restaurantId";
+            $stmt2 = $pdo->prepare($sqlQ);
+            $stmt2->bindParam(':restaurantId', $restaurantId);
+            $stmt2->execute();
+        } else {
+            $query1 = "SELECT profilePhoto FROM `user` WHERE email = :restaurantId";
+            $stmt3 = $pdo->prepare($query1);
+            $stmt3->bindParam(':restaurantId', $restaurantId);
+            $stmt3->execute();
+            $row = $stmt3->fetch(PDO::FETCH_ASSOC);
+            $fileName = $row['profilePhoto'];
+
+            if ($fileName != 'customerUniversalPhoto.jpg') {
+                unlink('../resourses/profilePhoto/' . $fileName);
+            }
+
+            $sqlQ = "DELETE FROM `user` WHERE email = :restaurantId";
+            $stmt4 = $pdo->prepare($sqlQ);
+            $stmt4->bindParam(':restaurantId', $restaurantId);
+            $stmt4->execute();
         }
-        $sqlQ= "DELETE FROM `user` WHERE email = '$restaurantId'";
-        $result = mysqli_query($con,$sqlQ);
-   }
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+    }
+}
 
-} 
-   
 session_start();
-
 session_destroy();
 header('location:../pages/login.php');
+
 
 ?>
