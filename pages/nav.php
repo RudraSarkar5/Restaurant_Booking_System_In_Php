@@ -36,6 +36,7 @@
     echo '<a href="./login.php" class="text-white">Login</a>';
 }
 ?>
+                <a href="./aboutuspage.php" class="text-white">Contact Us</a>
 
 
 
@@ -64,7 +65,7 @@
                 echo '<a href="./login.php" class="block text-white p-2">Login</a>';
                 }
             ?>
-
+            <a href="./aboutuspage.php" class="text-white p-2">Contact Us</a>
 
         </div>
     </nav>

@@ -2,12 +2,12 @@
    include('./nav.php');
 require_once('../connect.php');
 
-// Create a DatabaseConnection instance to establish the database connection.
+
 $database = new DatabaseConnection();
 $pdo = $database->getConnection();
 include('../controler/fetchFromDatabase.php');
 $obj = new DatabaseManager($pdo);
-$obj->manageReservation($pdo); // Replace $con with $pdo for PDO usage
+$obj->manageReservation($pdo); 
 
 if (!isset($_SESSION['userEmail'])) {
     header("location:./login.php");

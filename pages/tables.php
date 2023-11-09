@@ -2,7 +2,7 @@
     include('./nav.php');
 require_once('../connect.php');
 
-// Create a DatabaseConnection instance to establish the database connection.
+
 $database = new DatabaseConnection();
 $pdo = $database->getConnection();
 include('../controler/fetchFromDatabase.php');
@@ -12,11 +12,11 @@ $restaurantId = $_GET['restaurantId'];
 
 if (isset($_GET['tableId'])) {
     $tableId = $_GET['tableId'];
-    $tableDetails = $obj->fetchTableDetailsFromDatabase($tableId); // Replace $con with $pdo
+    $tableDetails = $obj->fetchTableDetailsFromDatabase($tableId); 
 }
 
-$tableList = $obj->fetchTablesFromDatabase($restaurantId); // Replace $con with $pdo
-$restaurant = $obj->fetchRestaurantDetailsFromDatabase($restaurantId); // Replace $con with $pdo
+$tableList = $obj->fetchTablesFromDatabase($restaurantId); 
+$restaurant = $obj->fetchRestaurantDetailsFromDatabase($restaurantId); 
 
     
 ?>

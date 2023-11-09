@@ -3,14 +3,14 @@
    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
      require_once('../connect.php');
 
-// Create a DatabaseConnection instance to establish the database connection.
+
 $database = new DatabaseConnection();
 $pdo = $database->getConnection();
 
     $foodName = $_POST['foodName'];
     $foodPrice = $_POST['foodPrice'];
 
-    // Check if a file was uploaded
+    
     if (isset($_FILES['menuImage']) && $_FILES['menuImage']['error'] === UPLOAD_ERR_OK) {
         $fileName = $_FILES['menuImage']['name'];
         $tempFile = $_FILES['menuImage']['tmp_name'];

@@ -205,7 +205,7 @@ if ($bookingPrice < $minBookingPrice) { $minBookingPrice=$bookingPrice; } if ($b
         try {
         $stmt->execute();
         } catch (PDOException $e) {
-        // Handle any potential errors here
+        
         die("Error: " . $e->getMessage());
         }
         }

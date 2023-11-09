@@ -1,18 +1,18 @@
 <?php
 include('./nav.php');
 
-// Include the DatabaseConnection class file
+
 require_once('../connect.php');
 
-// Create a DatabaseConnection instance to establish the database connection.
+
 $database = new DatabaseConnection();
 $pdo = $database->getConnection();
 
-// Include the fetchFromDatabase function
+
 include('../controler/fetchFromDatabase.php');
 $obj = new DatabaseManager($pdo);
 
-// Call the manageReservation function
+
 $obj->manageReservation();
 
 if (isset($_GET["page"])) {
@@ -29,10 +29,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($searchValue)) {
         $query = "SELECT * FROM `restaurantowner` WHERE address LIKE :searchValueWithWildcard";
         $stmt = $pdo->prepare($query);
-        $searchValueWithWildcard = $searchValue . '%'; // Add '%' only when executing the query
+        $searchValueWithWildcard = $searchValue . '%'; 
          $stmt->bindParam(':searchValueWithWildcard', $searchValueWithWildcard, PDO::PARAM_STR);
         $stmt->execute();
-         // Add '%' to the searchValue only when executing the query
+         
     } else {
         $query = "SELECT * FROM `restaurantowner`";
         $stmt2 = $pdo->query($query);
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt2 = $pdo->query($query);
 }
 
-// Calculate the total number of pages for pagination
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($searchValue)) {
     $totalResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }else{
@@ -67,9 +67,9 @@ $stmt3->bindParam(':restaurantPerPage', $restaurantPerPage, PDO::PARAM_INT);
 $stmt3->execute();
 $result1 = $stmt3->fetchAll(PDO::FETCH_ASSOC);
 
-// Display your results here...
 
-// Pagination controls can be added here based on $numberOfPage and $page variables.
+
+
 ?>
 
 
@@ -134,32 +134,33 @@ if (count($result1) > 0) {
             $firstImageName = $restaurantFirstImage['imageName'];
             ?>
             <div
-                class="bg-gray-100 flex-col justify-center items-center w-full md:w-[25%] lg:w-[27%] h-[400px] mx-6 mb-8 p-2">
+                class="bg-gray-100 flex flex-col justify-center items-center w-full md:w-[25%] lg:w-[27%] h-[450px] mx-6 mb-8 p-4 rounded-lg shadow-lg">
                 <div class="image-container mx-auto">
                     <img class="mx-auto overflow-hidden" src="../resourses/restaurantImages/<?=$firstImageName ?>"
-                        alt=<?=$firstImageName ?> />
+                        alt="<?=$firstImageName ?>" />
                 </div>
-                <div class="p-4 flex justify-center items-center flex-col">
-                    <h1 class="text-2xl font-semibold "><?=$restaurant["restaurantName"] ?></h1>
+                <div class="p-4 flex flex-col items-center space-y-2">
+                    <h1 class="text-2xl font-semibold text-gray-800"><?=$restaurant["restaurantName"] ?></h1>
                     <p class="text-gray-600">Location: <?=$restaurant["address"] ?></p>
                     <?php
-                    $bookingPrice = $obj->fetchBookingPriceFromDatabase($restaurant['email']);
-                    ?>
+        $bookingPrice = $obj->fetchBookingPriceFromDatabase($restaurant['email']);
+        ?>
                     <p class="text-gray-600">Booking Price: ₹ <?=$bookingPrice["min"] ?> - ₹ <?=$bookingPrice["max"] ?>
                     </p>
                     <?php
-                    $openingTime = date("g a", strtotime($restaurant["openingTime"]));
-                    $closingTime = date("g a", strtotime($restaurant["closingTime"]));
-                    ?>
-                    <p class="text-gray-600">Timing: <?=$openingTime?> to <?=$closingTime?> </p>
-                    <div class="my-4 flex justify-center">
+        $openingTime = date("g a", strtotime($restaurant["openingTime"]));
+        $closingTime = date("g a", strtotime($restaurant["closingTime"]));
+        ?>
+                    <p class="text-gray-600">Timing: <?=$openingTime?> to <?=$closingTime?></p>
+                    <div class="my-4">
                         <a href="restaurantDetails.php?restaurantId=<?=$restaurant['email']?>"
-                            class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1  rounded-md">
+                            class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md">
                             View Details
                         </a>
                     </div>
                 </div>
             </div>
+
             <?php
         }
     }

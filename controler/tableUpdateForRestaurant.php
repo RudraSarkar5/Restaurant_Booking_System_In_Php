@@ -3,7 +3,7 @@
    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     require_once('../connect.php');
 
-// Create a DatabaseConnection instance to establish the database connection.
+
 $database = new DatabaseConnection();
 $pdo = $database->getConnection();
     $tableCapacity = $_POST['tableCapacity'];

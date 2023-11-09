@@ -2,7 +2,7 @@
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     require_once('../connect.php');
 
-// Create a DatabaseConnection instance to establish the database connection.
+
 $database = new DatabaseConnection();
 $pdo = $database->getConnection();
     include('./fetchFromDatabase.php');
@@ -21,8 +21,8 @@ $pdo = $database->getConnection();
         exit();
     }
 
-    $currentDateTime = new DateTime(); // Get the current date and time
-    $userSelectedDateTime = new DateTime($checkingDate . ' ' . $checkingTime); // Combine the date and time
+    $currentDateTime = new DateTime(); 
+    $userSelectedDateTime = new DateTime($checkingDate . ' ' . $checkingTime); 
 
     if ($userSelectedDateTime < $currentDateTime) {
     $msg = "Dont use Pasing time to booking";
