@@ -192,7 +192,13 @@ $tableList = $obj->fetchTablesFromDatabase($restaurantId);
       for( $i = 0; count($allReview) > $i; $i++ ) {                  
     ?>
                         <li class="menu_details">
-                            <h3 class="font-bold"><?=$allReview[$i]['userName']?></h3>
+                            <div class="flex justify-between  ">
+                                <h3 class="font-bold text-xl"><?= $allReview[$i]['userName'] ?></h3>
+
+                                <a class="px-2 py-1 text-white bg-blue-500 rounded-lg hover-bg-blue-600"
+                                    href="../controler/deleteComments.php?id=<?=$allReview[$i]['id']?>&restaurantId=<?=$restaurantId?>&from=admin">Remove</a>
+
+                            </div>
                             <p><?=$allReview[$i]['text']?></p>
                         </li>
                         <?php

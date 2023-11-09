@@ -11,6 +11,7 @@ $obj = new DatabaseManager($pdo);
 $obj->manageReservation();
 
 $restaurantId = $_GET['restaurantId'];
+$user = $_SESSION['userEmail'];
 
 $restaurant = $obj->fetchRestaurantDetailsFromDatabase($restaurantId);
 $images = $obj->fetchImagesForRestaurantFromDatabase($restaurantId);
@@ -148,6 +149,7 @@ $allReview = $obj->fetchCommentsFromDatabase($restaurantId);
             <input type="text" name="comment" placeholder="Write your review here..."
                 class="w-3/4 p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring focus:ring-blue-200">
             <input type="text" name="restaurantId" value="<?= $restaurant['email'] ?>" class="hidden">
+
             <button class="px-4 py-2 text-white bg-blue-500 rounded-lg hover-bg-blue-600" type="submit">Submit</button>
         </form>
         <?php
@@ -159,7 +161,18 @@ $allReview = $obj->fetchCommentsFromDatabase($restaurantId);
                 for ($i = 0; count($allReview) > $i; $i++) {
             ?>
             <li class="menu_details">
-                <h3 class="font-bold"><?= $allReview[$i]['userName'] ?></h3>
+                <div class="flex justify-between  ">
+                    <h3 class="font-bold text-xl"><?= $allReview[$i]['userName'] ?></h3>
+                    <?php 
+                        if($allReview[$i]['userId'] == $user){
+                            ?>
+                    <a class="px-2 py-1 text-white bg-blue-500 rounded-lg hover-bg-blue-600"
+                        href="../controler/deleteComments.php?id=<?=$allReview[$i]['id']?>&restaurantId=<?=$restaurantId?>">Remove</a>
+                    <?php
+                    }
+                    ?>
+                </div>
+
                 <p><?= $allReview[$i]['text'] ?></p>
             </li>
             <?php
