@@ -14,6 +14,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $tempFile = $_FILES['profilePhoto']['tmp_name'];
     $folder = "../resourses/profilePhoto/" . $fileName;
 
+    // $otp = rand(100000, 999999);
+    // $otpExpiration = time() + 300; 
+
     if (empty($userName) || empty($email) || empty($phoneNumber) || empty($password)) {
         $msgforCustomer = "Please Fill All The Fields Properly";
         header("location:../pages/register.php?msgforCustomer=$msgforCustomer");

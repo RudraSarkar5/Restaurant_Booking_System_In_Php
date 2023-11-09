@@ -1,5 +1,7 @@
 <?php
 
+
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     require_once('../connect.php');
 
@@ -11,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = $_POST['password'];
 
     if (empty($email) || empty($password)) {
-        $loginErrorMessage = "Please Fill All The Fields Properly";
+        $loginErrorMessage = "Please Fill The Email Field";
     } else {
         $existingQueryInCustomer = "SELECT * FROM `user` WHERE email = :email";
         $existingQueryInRestaurantOwner = "SELECT * FROM `restaurantOwner` WHERE email = :email";
@@ -54,13 +56,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 }else{
-    if(isset($_GET['msgSent'])){
-        $msgSent = $_GET['msgSent'];
+    if(isset($_GET['msg'])){
+        $loginErrorMessage = $_GET['msg'];
     }
 }
-    
-      
-
 ?>
 
 
@@ -81,38 +80,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="flex items-center justify-center h-screen">
         <div class="bg-white bg-opacity-60 p-8 rounded-lg shadow-lg">
             <div class="flex flex-col justify-center items-center">
-                <img src="../resourses/Logo/user.png" alt="avater image" height="150px" width="100px">
-                <h2 class="text-2xl font-semibold mb-4 text-center">Login</h2>
+                <img src="../resourses/Logo/user.png" alt="avater image" height="100px" width="50px">
+                <h2 class="text-2xl font-semibold mb-4 text-center">Account Varify</h2>
             </div>
 
-            <form action="login.php" method="POST" class="space-y-4">
+            <form action="../controler/emailVarification.php" method="POST" class="space-y-4">
                 <div class='flex gap-8 justify-center items-center'>
                     <label for="email" class="block text-sm font-bold text-black">Email</label>
                     <input type="text" name="email" id="email" class="mt-1 p-2 rounded border w-full"
-                        placeholder="Username">
+                        placeholder="email address">
                 </div>
-                <div class='flex gap-2 justify-center items-center'>
-                    <label for="password" class="block text-sm font-bold text-black">Password</label>
-                    <input type="password" name="password" id="password" class="mt-1 p-2 rounded border w-full"
-                        placeholder="Password">
-                </div>
+
                 <button type="submit"
-                    class="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition-all w-full">Login</button>
+                    class="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition-all w-full">Send
+                    Password</button>
                 <?php
                 if (isset($loginErrorMessage)) {
                     echo '<div class="text-red-500 text-md text-center">' . $loginErrorMessage . '</div>';
                 }
-                if (isset($msgSent)) {
-                    echo '<div class="text-green-600 text-md text-center">' . $msgSent . '</div>';
-                }
                 ?>
-                <h1 class=" text-center text-lg">Forget Password? <a href="./varify.php" class="text-blue-500">click
-                        here</a></h1>
-                <div class='flex gap-2 items-center'>
-                    <h2 class="text-xl font-bold">If not have an Account?</h2>
-                    <a class="bg-blue-500 text-white p-2 rounded hover-bg-blue-600 transition-all"
-                        href="register.php">register</a>
-                </div>
+
             </form>
         </div>
     </div>
