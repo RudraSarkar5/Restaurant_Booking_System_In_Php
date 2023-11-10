@@ -74,13 +74,13 @@
                 <?php
                     if(isset($_GET['msgforCustomer'])){
                         $msg = $_GET['msgforCustomer'] ;
-                        echo '<div class="text-red-900 text-md text-center">' . $msg . '</div>';
+                        echo '<div class="text-red-900 font-bold text-md text-center">' . $msg . '</div>';
 
                 } ?>
                 <?php
                     if(isset($_GET['msg'])){
                         $msg = $_GET['msg'] ;
-                        echo '<div class="text-red-900 text-md text-center">' . $msg . '</div>';
+                        echo '<div class="text-red-900 font-bold text-md text-center">' . $msg . '</div>';
 
                 } ?>
                 <button type="submit"

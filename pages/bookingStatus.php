@@ -83,6 +83,7 @@ $pdo = $database->getConnection();
                                 <th class=" p-1 border">price</th>
                                 <th class=" p-1 border">Name</th>
                                 <th class=" p-1 border">Contact</th>
+                                <th class=" p-1 border">PaymentId</th>
 
 
                             </tr>
@@ -99,11 +100,13 @@ $pdo = $database->getConnection();
                                 <td class=" p-1 text-center border">
                                     <?= date("d F Y", strtotime($bookingList[$i]['reservationDate'])) ?>
                                 </td>
-                                <td class=" p-1 text-center border">
-                                    <?=$bookingList[$i]['checkInTime']?>
+                                <td class="lg:p-4 md:p-4 p-2 text-center border">
+                                    <?= date('g:i A', strtotime($bookingList[$i]['checkInTime'])) ?>
                                 </td>
-                                <td class=" p-1 text-center border"> <?=$bookingList[$i]['checkOutTime']?>
+                                <td class="lg:p-4 md:p-4 p-2 text-center border">
+                                    <?= date('g:i A', strtotime($bookingList[$i]['checkOutTime'])) ?>
                                 </td>
+
                                 <td class=" p-1 text-center border">₹
                                     <?=$bookingList[$i]['totalBookingPrice']?>
                                 </td>
@@ -115,7 +118,9 @@ $pdo = $database->getConnection();
                                     <?=$user['fullName']?>
                                 </td>
                                 <td class=" p-1 text-center border"><?=$user['phoneNumber']?></td>
-
+                                <td class=" p-1 text-center border">
+                                    <?=$bookingList[$i]['paymentId']?>
+                                </td>
                             </tr>
 
 

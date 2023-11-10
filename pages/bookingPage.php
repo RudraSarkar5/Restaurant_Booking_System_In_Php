@@ -35,7 +35,7 @@
                 <h2 class="text-2xl font-semibold mb-4 text-center">Booking</h2>
             </div>
 
-            <form action="../controler/booking.php" method="POST" class="space-y-4">
+            <form action="./booking.php" method="POST" class="space-y-4">
                 <div class='flex gap-8 justify-center items-center'>
                     <label for="checkingDate" class="block text-sm font-bold text-black">Date</label>
                     <input type="date" name="checkingDate" id="checkingDate" class="mt-1 p-2 rounded border w-full"
@@ -59,7 +59,7 @@
                 </div>
                 <?php
                     if (isset($msg)) {
-                         echo '<div class="text-red-900 text-md text-center">' . $msg . '</div>';
+                         echo '<div class="text-red-900 text-md font-bold text-center">' . $msg . '</div>';
                     }
                 ?>
 

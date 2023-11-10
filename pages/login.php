@@ -100,13 +100,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     class="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition-all w-full">Login</button>
                 <?php
                 if (isset($loginErrorMessage)) {
-                    echo '<div class="text-red-500 text-md text-center">' . $loginErrorMessage . '</div>';
+                    echo '<div class="text-red-500 text-md font-bold text-center">' . $loginErrorMessage . '</div>';
                 }
                 if (isset($msgSent)) {
-                    echo '<div class="text-green-600 text-md text-center">' . $msgSent . '</div>';
+                    echo '<div class="text-green-600 text-md font-bold text-center">' . $msgSent . '</div>';
                 }
                 ?>
-                <h1 class=" text-center text-lg">Forget Password? <a href="./varify.php" class="text-blue-500">click
+                <h1 class=" text-center font-bold text-lg">Forget Password? <a href="./varify.php"
+                        class="text-blue-500">click
                         here</a></h1>
                 <div class='flex gap-2 items-center'>
                     <h2 class="text-xl font-bold">If not have an Account?</h2>

@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="bg-white bg-opacity-60 p-8 rounded-lg shadow-lg">
             <div class="flex flex-col justify-center items-center">
                 <img src="../resourses/Logo/user.png" alt="avater image" height="100px" width="50px">
-                <h2 class="text-2xl font-semibold mb-4 text-center">Account Varify</h2>
+                <h2 class="text-2xl font-semibold mb-4 text-center">Password Rescue</h2>
             </div>
 
             <form action="../controler/emailVarification.php" method="POST" class="space-y-4">

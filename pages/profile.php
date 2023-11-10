@@ -68,7 +68,7 @@
                         </div>
 
 
-                        <div class="mt-8">
+                        <section class="mt-8">
                             <div class="flex flex-col mt-10 justify-center items-center">
 
                                 <h3 class="text-xl font-semibold mb-4 text-center mt-4">
@@ -83,6 +83,7 @@
                                             <th class=" p-2 border">checking Time</th>
                                             <th class=" p-2 border">checkout Time</th>
                                             <th class=" p-2 border">Booking price</th>
+                                            <th class=" p-2 border">PaymentId</th>
                                             <th class=" p-2 border">Restaurant Name</th>
 
 
@@ -103,13 +104,18 @@
                                             </td>
 
                                             <td class="lg:p-4 md:p-4 p-2 text-center border">
-                                                <?=$bookingList[$i]['checkInTime']?>
+                                                <?= date('g:i A', strtotime($bookingList[$i]['checkInTime'])) ?>
                                             </td>
                                             <td class="lg:p-4 md:p-4 p-2 text-center border">
-                                                <?=$bookingList[$i]['checkOutTime']?>
+                                                <?= date('g:i A', strtotime($bookingList[$i]['checkOutTime'])) ?>
                                             </td>
+
+
                                             <td class="lg:p-4 md:p-4 p-2 text-center border">₹
                                                 <?=$bookingList[$i]['totalBookingPrice']?>
+                                            </td>
+                                            <td class=" p-1 text-center border">
+                                                <?=$bookingList[$i]['paymentId']?>
                                             </td>
                                             <td class="lg:p-4 md:p-4 p-2 text-center border">
                                                 <?php
@@ -135,7 +141,7 @@
                   ?> </tbody>
                                 </table>
                             </div>
-                        </div>
+                        </section>
                     </div>
                 </div>
 
