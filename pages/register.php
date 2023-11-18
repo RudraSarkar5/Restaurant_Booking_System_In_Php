@@ -68,7 +68,7 @@
                     <div>
                         <input type="file" name="profilePhoto" id="profilePhoto" class="mt-1 p-2 rounded border w-full"
                             placeholder="Upload Profile Photo">
-                        <h1 class=" text-gray-900">Profile Photo Not Mandatory</h1>
+                        <h1 class=" text-green-900">Profile Photo Not Mandatory</h1>
                     </div>
                 </div>
                 <?php

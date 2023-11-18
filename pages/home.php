@@ -111,6 +111,11 @@ $result1 = $stmt3->fetchAll(PDO::FETCH_ASSOC);
                 <img src="../resourses/SlideImages/slideImage8.jpg" class="slide rounded-md" alt="" />
                 <img src="../resourses/SlideImages/slideImage9.jpg" class="slide rounded-md" alt="" />
                 <img src="../resourses/SlideImages/slideImage10.jpg" class="slide rounded-md" alt="" />
+                <img src="../resourses/SlideImages/slideImage11.jpg" class="slide rounded-md" alt="" />
+                <img src="../resourses/SlideImages/slideImage12.jpg" class="slide rounded-md" alt="" />
+                <img src="../resourses/SlideImages/slideImage13.jpg" class="slide rounded-md" alt="" />
+                <img src="../resourses/SlideImages/slideImage14.jpg" class="slide rounded-md" alt="" />
+                <img src="../resourses/SlideImages/slideImage15.jpg" class="slide rounded-md" alt="" />
 
             </div>
         </div>
